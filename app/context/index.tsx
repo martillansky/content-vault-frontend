@@ -33,6 +33,7 @@ createAppKit({
     analytics: true, // Optional - defaults to your Cloud configuration
     connectMethodsOrder: ["wallet"],
   },
+  enableNetworkSwitch: true,
 });
 
 function ContextProvider({

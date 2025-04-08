@@ -1,48 +1,13 @@
 "use client";
 
+import { useAppKitAccount } from "@reown/appkit/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import VaultList from "../components/VaultList";
-import { useWallet } from "../context/WalletContext";
-
-// Sample data for demonstration
-const sampleVaults = [
-  {
-    id: "vault1",
-    name: "Personal Documents",
-    description: "Important personal documents and certificates",
-    owner: "0x1234...5678",
-    lastAccessed: "2024-04-08",
-    itemCount: 12,
-  },
-  {
-    id: "vault2",
-    name: "Project Files",
-    description: "Work-related documents and project files",
-    owner: "0x1234...5678",
-    lastAccessed: "2024-04-07",
-    itemCount: 8,
-  },
-  {
-    id: "vault3",
-    name: "Media Library",
-    description: "Photos, videos, and other media files",
-    owner: "0x1234...5678",
-    lastAccessed: "2024-04-06",
-    itemCount: 24,
-  },
-  {
-    id: "vault4",
-    name: "Shared Documents",
-    description: "Documents shared with team members",
-    owner: "0xabcd...efgh",
-    lastAccessed: "2024-04-05",
-    itemCount: 15,
-  },
-];
+import { sampleVaults } from "../mockData/mockData";
 
 export default function VaultsPage() {
-  const { isConnected } = useWallet();
+  const { isConnected } = useAppKitAccount();
   const router = useRouter();
 
   // Use useEffect for navigation to avoid hook rendering issues

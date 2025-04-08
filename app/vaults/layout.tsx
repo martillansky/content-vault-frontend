@@ -1,15 +1,23 @@
 "use client";
 
 import { ArrowLeftOnRectangleIcon } from "@heroicons/react/24/outline";
+import {
+  useAppKitAccount,
+  useAppKitNetwork,
+  useDisconnect,
+} from "@reown/appkit/react";
 import React from "react";
-import { useWallet } from "../context/WalletContext";
 
 export default function VaultsLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { address, disconnectWallet } = useWallet();
+  const { address, isConnected, caipAddress, status, embeddedWalletInfo } =
+    useAppKitAccount();
+  const { disconnect } = useDisconnect();
+  const { caipNetwork, caipNetworkId, chainId, switchNetwork } =
+    useAppKitNetwork();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
@@ -34,10 +42,10 @@ export default function VaultsLayout({
               {address && (
                 <div className="flex items-center space-x-3">
                   <div className="bg-blue-100 dark:bg-blue-900/30 px-3 py-1 rounded-full text-sm text-blue-800 dark:text-blue-300">
-                    {address}
+                    {address + " Chain: " + chainId}
                   </div>
                   <button
-                    onClick={disconnectWallet}
+                    onClick={async () => await disconnect()}
                     className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
                     title="Disconnect Wallet"
                   >

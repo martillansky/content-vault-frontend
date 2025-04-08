@@ -1,34 +1,27 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { WalletProvider } from "./context/WalletContext";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import { headers } from "next/headers";
+import ContextProvider from "./context";
 
 export const metadata: Metadata = {
-  title: "Content Vault",
-  description: "A decentralized content management system",
+  title: "AppKit Example App",
+  description: "Powered by WalletConnect",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const headersList = await headers();
+  const cookies = headersList.get("cookie");
+
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-white dark:bg-gray-900`}
-      >
-        <WalletProvider>{children}</WalletProvider>
+      <body>
+        <ContextProvider cookies={cookies}>{children}</ContextProvider>
       </body>
     </html>
   );

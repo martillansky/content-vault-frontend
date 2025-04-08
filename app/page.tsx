@@ -1,12 +1,15 @@
 "use client";
 
+import { useAppKit, useAppKitAccount } from "@reown/appkit/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import LandingPage from "./components/LandingPage";
-import { useWallet } from "./context/WalletContext";
 
 export default function Home() {
-  const { isConnected, connectWallet } = useWallet();
+  const { open, close } = useAppKit();
+  const { address, isConnected, caipAddress, status, embeddedWalletInfo } =
+    useAppKitAccount();
+
   const router = useRouter();
 
   // Use useEffect for navigation to avoid hook rendering issues
@@ -31,5 +34,5 @@ export default function Home() {
   }
 
   // Otherwise, show the landing page
-  return <LandingPage onConnectWallet={connectWallet} />;
+  return <LandingPage onConnectWallet={() => open({ view: "Connect" })} />;
 }

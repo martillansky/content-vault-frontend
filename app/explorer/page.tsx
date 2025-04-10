@@ -4,12 +4,15 @@ import { useAppKitAccount } from "@reown/appkit/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
 import FileExplorer from "../components/FileExplorer";
+import { useVaultsContents } from "../subgraph/hooks/Content";
 
 export default function ExplorerPage() {
   const { isConnected } = useAppKitAccount();
   const router = useRouter();
   const searchParams = useSearchParams();
   const vaultId = searchParams.get("vault");
+
+  const { data: contents } = useVaultsContents(vaultId ?? "");
 
   // Use useEffect for navigation to avoid hook rendering issues
   useEffect(() => {
@@ -40,14 +43,16 @@ export default function ExplorerPage() {
     <div className="p-6">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-          Vault Explorer
+          Vault: {vaultId}
         </h1>
         <p className="mt-2 text-gray-500 dark:text-gray-400">
           Browse and manage your vault contents
         </p>
       </div>
 
-      <FileExplorer vaultId={vaultId} />
+      <FileExplorer
+        contents={contents?.contentStoredWithMetadata_collection ?? []}
+      />
     </div>
   );
 }

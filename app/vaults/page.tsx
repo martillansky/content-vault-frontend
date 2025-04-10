@@ -5,10 +5,13 @@ import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import VaultList from "../components/VaultList";
 import { sampleVaults } from "../mockData/mockData";
+import { useVaultsGQL } from "../subgraph/hooks/Vaults";
 
 export default function VaultsPage() {
-  const { isConnected } = useAppKitAccount();
+  const { isConnected, address } = useAppKitAccount();
   const router = useRouter();
+
+  const { data, isLoading } = useVaultsGQL(address ?? "");
 
   // Use useEffect for navigation to avoid hook rendering issues
   useEffect(() => {
@@ -42,7 +45,10 @@ export default function VaultsPage() {
         </p>
       </div>
 
-      <VaultList vaults={sampleVaults} />
+      <VaultList
+        //vaultCreateds={sampleVaults.concat(data?.vaultCreateds ?? [])}
+        vaultCreateds={data?.vaultCreateds ?? []}
+      />
     </div>
   );
 }

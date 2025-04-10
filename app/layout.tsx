@@ -1,14 +1,7 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 
 import { headers } from "next/headers";
 import ContextProvider from "./context";
-
-export const metadata: Metadata = {
-  title: "AppKit Example App",
-  description: "Powered by WalletConnect",
-};
 
 export default async function RootLayout({
   children,
@@ -20,6 +13,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
+      <head />
       <body>
         <ContextProvider cookies={cookies}>{children}</ContextProvider>
       </body>

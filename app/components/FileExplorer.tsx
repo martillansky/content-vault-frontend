@@ -1,202 +1,38 @@
 "use client";
 
+import { contentFormatter } from "@/utils/dataFormaters";
+import { decryptCIDFromHex } from "@/utils/secureEncryption_Multiformats";
 import {
   ChevronDownIcon,
   ChevronRightIcon,
   DocumentIcon,
   FolderIcon,
 } from "@heroicons/react/24/outline";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
+import { sampleData } from "../mockData/mockData";
+import { Content } from "../subgraph/types/Content.types";
 
-interface FileNode {
+export interface FileNode {
   id: string;
   name: string;
-  type: "file" | "folder";
-  children?: FileNode[];
-  size?: number;
-  lastModified?: string;
+  extension: string;
+  description: string;
+  metatype: "file" | "folder";
+  children: FileNode[];
+  type?: string;
+  created?: string;
 }
 
 export interface FileExplorerProps {
-  vaultId: string;
+  contents: Content[];
 }
 
-// Sample data structure
-const sampleData = {
-  id: "root",
-  name: "Content Vault",
-  type: "folder" as const,
-  children: [
-    {
-      id: "folder1",
-      name: "Documents",
-      type: "folder" as const,
-      children: [
-        {
-          id: "file1",
-          name: "report.pdf",
-          type: "file" as const,
-          size: 1024,
-          lastModified: "2024-04-08",
-        },
-        {
-          id: "file2",
-          name: "presentation.pptx",
-          type: "file" as const,
-          size: 2048,
-          lastModified: "2024-04-07",
-        },
-      ],
-    },
-    {
-      id: "folder2",
-      name: "Images",
-      type: "folder" as const,
-      children: [
-        {
-          id: "file3",
-          name: "photo.jpg",
-          type: "file" as const,
-          size: 3072,
-          lastModified: "2024-04-06",
-        },
-      ],
-    },
-  ],
-};
-
-// Sample vault data mapping
-const vaultDataMap: Record<string, any> = {
-  vault1: {
-    id: "root",
-    name: "Personal Documents",
-    type: "folder" as const,
-    children: [
-      {
-        id: "folder1",
-        name: "Certificates",
-        type: "folder" as const,
-        children: [
-          {
-            id: "file1",
-            name: "birth_certificate.pdf",
-            type: "file" as const,
-            size: 1024,
-            lastModified: "2024-04-08",
-          },
-          {
-            id: "file2",
-            name: "diploma.pdf",
-            type: "file" as const,
-            size: 2048,
-            lastModified: "2024-04-07",
-          },
-        ],
-      },
-      {
-        id: "folder2",
-        name: "ID Documents",
-        type: "folder" as const,
-        children: [
-          {
-            id: "file3",
-            name: "passport.jpg",
-            type: "file" as const,
-            size: 3072,
-            lastModified: "2024-04-06",
-          },
-          {
-            id: "file4",
-            name: "drivers_license.pdf",
-            type: "file" as const,
-            size: 1536,
-            lastModified: "2024-04-05",
-          },
-        ],
-      },
-    ],
-  },
-  vault2: {
-    id: "root",
-    name: "Project Files",
-    type: "folder" as const,
-    children: [
-      {
-        id: "folder1",
-        name: "Designs",
-        type: "folder" as const,
-        children: [
-          {
-            id: "file1",
-            name: "mockup.fig",
-            type: "file" as const,
-            size: 4096,
-            lastModified: "2024-04-08",
-          },
-        ],
-      },
-      {
-        id: "folder2",
-        name: "Documents",
-        type: "folder" as const,
-        children: [
-          {
-            id: "file2",
-            name: "specifications.docx",
-            type: "file" as const,
-            size: 2048,
-            lastModified: "2024-04-07",
-          },
-        ],
-      },
-    ],
-  },
-  vault3: sampleData,
-  vault4: {
-    id: "root",
-    name: "Shared Documents",
-    type: "folder" as const,
-    children: [
-      {
-        id: "folder1",
-        name: "Team Reports",
-        type: "folder" as const,
-        children: [
-          {
-            id: "file1",
-            name: "q1_report.pdf",
-            type: "file" as const,
-            size: 3072,
-            lastModified: "2024-04-08",
-          },
-          {
-            id: "file2",
-            name: "q2_forecast.xlsx",
-            type: "file" as const,
-            size: 2048,
-            lastModified: "2024-04-07",
-          },
-        ],
-      },
-    ],
-  },
-};
-
-const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
+const FileExplorer: React.FC<FileExplorerProps> = ({ contents }) => {
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(
     new Set()
   );
   const [selectedFile, setSelectedFile] = useState<FileNode | null>(null);
-  const [vaultData, setVaultData] = useState<FileNode>(sampleData);
-  const [vaultName, setVaultName] = useState<string>("Content Vault");
-
-  // Set the vault data based on the vaultId
-  React.useEffect(() => {
-    if (vaultId && vaultDataMap[vaultId]) {
-      setVaultData(vaultDataMap[vaultId]);
-      setVaultName(vaultDataMap[vaultId].name);
-    }
-  }, [vaultId]);
+  const vaultData = useMemo(() => contentFormatter(contents), [contents]);
 
   const toggleFolder = (folderId: string) => {
     setExpandedFolders((prev) => {
@@ -214,23 +50,25 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
     setSelectedFile(file);
   };
 
-  const handleFileDoubleClick = (file: FileNode) => {
-    if (file.type === "file") {
-      window.open(`/api/files/${file.id}`, "_blank");
-    }
-  };
+  const handleFileDoubleClick = async (file: FileNode) => {
+    if (file.metatype === "file") {
+      try {
+        const encryptedCID = contents[0].encryptedCID; // TODO: change to the file's encryptedCID
+        const decrypted = await decryptCIDFromHex(
+          encryptedCID,
+          process.env.NEXT_PUBLIC_SALT || ""
+        );
 
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return "0 Bytes";
-    const k = 1024;
-    const sizes = ["Bytes", "KB", "MB", "GB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+        window.open(`https://ipfs.io/ipfs/${decrypted}`, "_blank");
+      } catch (error) {
+        console.error("Decryption failed:", error);
+      }
+    }
   };
 
   const renderTree = (node: FileNode, level: number = 0) => {
     const isExpanded = expandedFolders.has(node.id);
-    const isFolder = node.type === "folder";
+    const isFolder = node.metatype === "folder";
     const paddingLeft = `${level * 1.5}rem`;
 
     return (
@@ -282,7 +120,7 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
         {selectedFile ? (
           <div className="space-y-6">
             <div className="flex items-center space-x-3">
-              {selectedFile.type === "folder" ? (
+              {selectedFile.metatype === "folder" ? (
                 <FolderIcon className="h-8 w-8 text-yellow-500 dark:text-yellow-400" />
               ) : (
                 <DocumentIcon className="h-8 w-8 text-gray-500 dark:text-gray-400" />
@@ -292,33 +130,45 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
               </h2>
             </div>
             <div className="space-y-4">
+              {selectedFile.description && (
+                <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    Description
+                  </p>
+                  <p className="text-lg font-medium text-gray-900 dark:text-white">
+                    {selectedFile.description}
+                  </p>
+                </div>
+              )}
               <div className="grid grid-cols-2 gap-4">
+                {selectedFile.type && (
+                  <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      Extension
+                    </p>
+                    <p className="text-lg font-medium text-gray-900 dark:text-white">
+                      {selectedFile.extension}
+                    </p>
+                  </div>
+                )}
+                {selectedFile.created && (
+                  <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      Created
+                    </p>
+                    <p className="text-lg font-medium text-gray-900 dark:text-white">
+                      {selectedFile.created}
+                    </p>
+                  </div>
+                )}
+              </div>
+              {selectedFile.type && (
                 <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
                   <p className="text-sm text-gray-500 dark:text-gray-400">
                     Type
                   </p>
                   <p className="text-lg font-medium text-gray-900 dark:text-white capitalize">
                     {selectedFile.type}
-                  </p>
-                </div>
-                {selectedFile.size && (
-                  <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      Size
-                    </p>
-                    <p className="text-lg font-medium text-gray-900 dark:text-white">
-                      {formatFileSize(selectedFile.size)}
-                    </p>
-                  </div>
-                )}
-              </div>
-              {selectedFile.lastModified && (
-                <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Last Modified
-                  </p>
-                  <p className="text-lg font-medium text-gray-900 dark:text-white">
-                    {selectedFile.lastModified}
                   </p>
                 </div>
               )}

@@ -7,21 +7,9 @@ import {
 } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { VaultCreated, VaultsResponse } from "../subgraph/types/Vaults.types";
 
-interface Vault {
-  id: string;
-  name: string;
-  description: string;
-  owner: string;
-  lastAccessed: string;
-  itemCount: number;
-}
-
-interface VaultListProps {
-  vaults: Vault[];
-}
-
-const VaultList: React.FC<VaultListProps> = ({ vaults }) => {
+const VaultList: React.FC<VaultsResponse> = ({ vaultCreateds }) => {
   const router = useRouter();
   const [selectedVault, setSelectedVault] = useState<string | null>(null);
 
@@ -54,7 +42,7 @@ const VaultList: React.FC<VaultListProps> = ({ vaults }) => {
         </button>
       </div>
 
-      {vaults.length === 0 ? (
+      {vaultCreateds.length === 0 ? (
         <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-8 text-center">
           <FolderIcon className="h-16 w-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
           <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-2">
@@ -70,15 +58,15 @@ const VaultList: React.FC<VaultListProps> = ({ vaults }) => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {vaults.map((vault) => (
+          {vaultCreateds.map((vault) => (
             <div
-              key={vault.id}
+              key={vault.tokenId}
               className={`bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden transition-all duration-200 ${
-                selectedVault === vault.id
+                selectedVault === vault.tokenId
                   ? "ring-2 ring-blue-500"
                   : "hover:shadow-lg"
               }`}
-              onClick={() => handleVaultClick(vault.id)}
+              onClick={() => handleVaultClick(vault.tokenId)}
             >
               <div className="p-6">
                 <div className="flex items-start justify-between">
@@ -88,7 +76,7 @@ const VaultList: React.FC<VaultListProps> = ({ vaults }) => {
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                        {vault.name}
+                        {vault.name ?? "Vault " + vault.tokenId}
                       </h3>
                       <p className="text-sm text-gray-500 dark:text-gray-400 truncate max-w-[200px]">
                         {vault.description}
@@ -129,7 +117,7 @@ const VaultList: React.FC<VaultListProps> = ({ vaults }) => {
                   className="mt-6 w-full py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg transition-colors flex items-center justify-center space-x-2"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleVaultSelect(vault.id);
+                    handleVaultSelect(vault.tokenId);
                   }}
                 >
                   <span>Open Vault</span>

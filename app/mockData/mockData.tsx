@@ -1,78 +1,105 @@
+import { FileNode } from "../components/FileExplorer";
+
 // Sample data for demonstration
 export const sampleVaults = [
   {
-    id: "vault1",
     name: "Personal Documents",
     description: "Important personal documents and certificates",
     owner: "0x1234...5678",
     lastAccessed: "2024-04-08",
     itemCount: 12,
+    tokenId: "12",
+    schemaCID: "QmHash",
+    blockTimestamp: "1712345678",
   },
   {
-    id: "vault2",
     name: "Project Files",
     description: "Work-related documents and project files",
     owner: "0x1234...5678",
     lastAccessed: "2024-04-07",
     itemCount: 8,
+    tokenId: "2",
+    schemaCID: "QmHash",
+    blockTimestamp: "1712345678",
   },
   {
-    id: "vault3",
     name: "Media Library",
     description: "Photos, videos, and other media files",
     owner: "0x1234...5678",
     lastAccessed: "2024-04-06",
     itemCount: 24,
+    tokenId: "3",
+    schemaCID: "QmHash",
+    blockTimestamp: "1712345678",
   },
   {
-    id: "vault4",
     name: "Shared Documents",
     description: "Documents shared with team members",
     owner: "0xabcd...efgh",
     lastAccessed: "2024-04-05",
     itemCount: 15,
+    tokenId: "4",
+    schemaCID: "QmHash",
+    blockTimestamp: "1712345678",
   },
 ];
 
-/* 
 // Sample data structure
-export const sampleData = {
+export const sampleData: FileNode = {
   id: "root",
   name: "Content Vault",
-  type: "folder" as const,
+  extension: "",
+  description: "",
+  type: "",
+  metatype: "folder" as const,
   children: [
     {
       id: "folder1",
       name: "Documents",
-      type: "folder" as const,
+      extension: "",
+      description: "",
+      type: "",
+      metatype: "folder" as const,
       children: [
         {
           id: "file1",
           name: "report.pdf",
-          type: "file" as const,
-          size: 1024,
-          lastModified: "2024-04-08",
+          type: "image/png",
+          extension: "pdf",
+          description: "A report about the company",
+          created: "2024-04-08",
+          metatype: "file" as const,
+          children: [],
         },
         {
           id: "file2",
           name: "presentation.pptx",
-          type: "file" as const,
-          size: 2048,
-          lastModified: "2024-04-07",
+          type: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+          extension: "pptx",
+          description: "A presentation about the company",
+          created: "2024-04-07",
+          metatype: "file" as const,
+          children: [],
         },
       ],
     },
     {
       id: "folder2",
       name: "Images",
-      type: "folder" as const,
+      extension: "",
+      description: "",
+      type: "",
+      metatype: "folder" as const,
       children: [
         {
           id: "file3",
           name: "photo.jpg",
-          type: "file" as const,
-          size: 3072,
-          lastModified: "2024-04-06",
+          type: "image/jpeg",
+          extension: "jpg",
+          description: "A photo of the company",
+          created: "2024-04-06",
+          metatype: "file" as const,
+          children: [],
         },
       ],
     },
@@ -80,7 +107,7 @@ export const sampleData = {
 };
 
 // Sample vault data mapping
-const vaultDataMap: Record<string, any> = {
+export const vaultDataMap: Record<string, any> = {
   vault1: {
     id: "root",
     name: "Personal Documents",
@@ -195,4 +222,3 @@ const vaultDataMap: Record<string, any> = {
     ],
   },
 };
- */

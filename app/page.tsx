@@ -6,6 +6,7 @@ import React, { useEffect } from "react";
 import LandingPage from "./components/LandingPage";
 
 export default function Home() {
+  //export default function ClientInteractions() {
   const { open, close } = useAppKit();
   const { address, isConnected, caipAddress, status, embeddedWalletInfo } =
     useAppKitAccount();

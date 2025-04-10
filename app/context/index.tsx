@@ -2,13 +2,11 @@
 
 import { mainnet, sepolia } from "@reown/appkit/networks";
 import { createAppKit } from "@reown/appkit/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { type ReactNode } from "react";
 import { cookieToInitialState, WagmiProvider, type Config } from "wagmi";
 import { projectId, wagmiAdapter } from "../../config";
-
-// Set up queryClient
-const queryClient = new QueryClient();
+import Providers from "./Providers";
+import ServerContent from "./ServerContent";
 
 if (!projectId) {
   throw new Error("Project ID is not defined");
@@ -18,7 +16,7 @@ if (!projectId) {
 const metadata = {
   name: "ContentVault",
   description: "Content Vault",
-  url: "https://contentvault.reown.com", // origin must match your domain & subdomain
+  url: "https://contentvault.reown.com", // origin must match domain & subdomain
   icons: ["https://assets.reown.com/reown-profile-pic.png"],
 };
 
@@ -30,19 +28,19 @@ createAppKit({
   defaultNetwork: sepolia,
   metadata: metadata,
   features: {
-    analytics: true, // Optional - defaults to your Cloud configuration
+    analytics: true, // Optional - defaults to Cloud configuration
     connectMethodsOrder: ["wallet"],
   },
   enableNetworkSwitch: true,
 });
 
-function ContextProvider({
-  children,
-  cookies,
-}: {
+// Define props interface
+interface ContextProviderProps {
   children: ReactNode;
   cookies: string | null;
-}) {
+}
+
+function ContextProvider({ children, cookies }: ContextProviderProps) {
   const initialState = cookieToInitialState(
     wagmiAdapter.wagmiConfig as Config,
     cookies
@@ -53,7 +51,10 @@ function ContextProvider({
       config={wagmiAdapter.wagmiConfig as Config}
       initialState={initialState}
     >
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <Providers>
+        <ServerContent />
+        {children}
+      </Providers>
     </WagmiProvider>
   );
 }

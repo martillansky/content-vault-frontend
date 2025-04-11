@@ -13,7 +13,7 @@ const GET_VAULTS_CREATED = gql`
   }
 `;
 
-export function useVaultsGQL(address: string) {
+export function useVaults(address: string) {
   return useQuery<VaultsResponse>({
     queryKey: ["vaults", address],
     queryFn: async () => {

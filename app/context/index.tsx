@@ -7,6 +7,7 @@ import { cookieToInitialState, WagmiProvider, type Config } from "wagmi";
 import { projectId, wagmiAdapter } from "../../config";
 import Providers from "./Providers";
 import ServerContent from "./ServerContent";
+import { VaultProvider } from "./VaultContext";
 
 if (!projectId) {
   throw new Error("Project ID is not defined");
@@ -53,7 +54,7 @@ function ContextProvider({ children, cookies }: ContextProviderProps) {
     >
       <Providers>
         <ServerContent />
-        {children}
+        <VaultProvider>{children}</VaultProvider>
       </Providers>
     </WagmiProvider>
   );

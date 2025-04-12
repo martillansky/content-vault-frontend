@@ -7,7 +7,6 @@ import LandingPage from "./components/LandingPage";
 import LoadingComponent from "./components/LoadingComponent";
 
 export default function Home() {
-  //export default function ClientInteractions() {
   const { open, close } = useAppKit();
   const { address, isConnected, caipAddress, status, embeddedWalletInfo } =
     useAppKitAccount();

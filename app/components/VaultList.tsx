@@ -11,6 +11,7 @@ import { useAppKitAccount } from "@reown/appkit/react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { sampleVaults } from "../mockData/mockData";
+import CreateVaultForm from "./dialogs/CreateVaultForm";
 import LoadingComponent from "./LoadingComponent";
 
 interface VaultListProps {
@@ -24,7 +25,7 @@ const VaultList: React.FC<VaultListProps> = ({ address }) => {
     address || connectedAddress || ""
   );
   const [selectedVault, setSelectedVault] = useState<string | null>(null);
-
+  const [showCreateVaultForm, setShowCreateVaultForm] = useState(false);
   const handleVaultClick = (vaultId: string) => {
     setSelectedVault(vaultId);
   };
@@ -62,11 +63,20 @@ const VaultList: React.FC<VaultListProps> = ({ address }) => {
 
   return (
     <div className="space-y-6">
+      {showCreateVaultForm && (
+        <CreateVaultForm
+          //vaultId={vaultId}
+          onClose={() => setShowCreateVaultForm(false)}
+        />
+      )}
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
           Your Vaults
         </h2>
-        <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center space-x-2 shadow-sm hover:shadow-md">
+        <button
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center space-x-2 shadow-sm hover:shadow-md"
+          onClick={() => setShowCreateVaultForm(true)}
+        >
           <FolderIcon className="h-5 w-5" />
           <span>Create New Vault</span>
         </button>

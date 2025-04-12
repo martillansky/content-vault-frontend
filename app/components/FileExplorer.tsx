@@ -7,11 +7,15 @@ import { decryptCIDFromHex } from "@/utils/secureEncryption_Multiformats";
 import {
   ChevronDownIcon,
   ChevronRightIcon,
+  Cog6ToothIcon,
   DocumentIcon,
   FolderIcon,
 } from "@heroicons/react/24/outline";
 import { useAppKitAccount } from "@reown/appkit/react";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { useVault } from "../context/VaultContext";
+import ContentUploadForm from "./dialogs/ContentUploadForm";
+import VaultSettingsForm from "./dialogs/VaultSettingsForm";
 import LoadingComponent from "./LoadingComponent";
 
 export interface FileNode {
@@ -32,10 +36,17 @@ interface FileExplorerProps {
 const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
   const { isConnected } = useAppKitAccount();
   const { data: contentResponse, isLoading } = useVaultsContents(vaultId);
+  const { setVaultId } = useVault();
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(
     new Set()
   );
   const [selectedFile, setSelectedFile] = useState<FileNode | null>(null);
+  const [showUploadForm, setShowUploadForm] = useState(false);
+  const [showVaultSettings, setShowVaultSettings] = useState(false);
+
+  useEffect(() => {
+    setVaultId(vaultId);
+  }, [vaultId, setVaultId]);
 
   const content = contentResponse?.contentStoredWithMetadata_collection || [];
   const vaultData = useMemo(() => contentFormatter(content), [content]);
@@ -73,6 +84,14 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
         console.error("Decryption failed:", error);
       }
     }
+  };
+
+  const handleVaultSettingsClick = () => {
+    setShowVaultSettings(true);
+  };
+
+  const handleVaultSettingsClose = () => {
+    setShowVaultSettings(false);
   };
 
   const renderTree = (node: FileNode, level: number = 0) => {
@@ -136,16 +155,49 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
 
   return (
     <>
+      {showUploadForm && (
+        <ContentUploadForm
+          vaultId={vaultId}
+          onClose={() => setShowUploadForm(false)}
+        />
+      )}
+
+      {showVaultSettings && (
+        <VaultSettingsForm
+          //vaultId={vaultId}
+          onClose={handleVaultSettingsClose}
+        />
+      )}
+
       <div className="flex justify-between items-center">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             Vault: {vaultId}
           </h1>
         </div>
-        <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center space-x-2 shadow-sm hover:shadow-md">
-          <FolderIcon className="h-5 w-5" />
-          <span>Create New Content</span>
-        </button>
+        <div className="flex space-x-2">
+          <button
+            onClick={handleVaultSettingsClick}
+            //className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center space-x-2 shadow-sm hover:shadow-md"
+          >
+            <Cog6ToothIcon className="h-4 w-4 mr-1" />
+            Vault Settings
+          </button>
+          {/* <button
+            onClick={() => setShowUploadForm(true)}
+            className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            Upload
+          </button> */}
+          <button
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center space-x-2 shadow-sm hover:shadow-md"
+            onClick={() => setShowUploadForm(true)}
+          >
+            <FolderIcon className="h-5 w-5" />
+            <span>Create New Content</span>
+          </button>
+        </div>
       </div>
       {!content || content.length === 0 ? (
         <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-8 text-center">

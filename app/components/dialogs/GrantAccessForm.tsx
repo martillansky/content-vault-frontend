@@ -110,12 +110,14 @@ export default function GrantAccessForm({
         {batchWallets.map((wallet, index) => (
           <div key={index} className="flex space-x-2 items-start">
             <div className="flex-grow">
-              <label
-                htmlFor={`wallet${index}`}
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-              >
-                Wallet Address
-              </label>
+              {index === 0 && (
+                <label
+                  htmlFor={`wallet${index}`}
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >
+                  Wallet Address
+                </label>
+              )}
               <input
                 type="text"
                 id={`wallet${index}`}
@@ -137,12 +139,14 @@ export default function GrantAccessForm({
               )}
             </div>
             <div className="w-40">
-              <label
-                htmlFor={`role${index}`}
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-              >
-                Role
-              </label>
+              {index === 0 && (
+                <label
+                  htmlFor={`role${index}`}
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >
+                  Role
+                </label>
+              )}
               <select
                 id={`role${index}`}
                 value={wallet.role}
@@ -153,7 +157,7 @@ export default function GrantAccessForm({
                     e.target.value as "contributor" | "viewer"
                   )
                 }
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               >
                 <option value="contributor">Contributor</option>
                 <option value="viewer">Viewer</option>
@@ -163,7 +167,9 @@ export default function GrantAccessForm({
               <button
                 type="button"
                 onClick={() => handleRemoveBatchWallet(index)}
-                className="mt-7 text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                className={`${
+                  index === 0 ? "mt-9" : "mt-2.5"
+                } text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300`}
               >
                 <XMarkIcon className="h-5 w-5" />
               </button>

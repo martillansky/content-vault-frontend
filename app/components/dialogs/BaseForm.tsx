@@ -13,6 +13,7 @@ interface BaseFormProps {
   onSubmit: (e: React.FormEvent) => void;
   cancelButtonText?: string;
   onCancel?: () => void;
+  noCancelButton?: boolean;
   maxWidth?: "sm" | "md" | "lg" | "xl" | "2xl" | "full";
   isLoading?: boolean;
   loadingText?: string;
@@ -30,6 +31,7 @@ export default function BaseForm({
   onSubmit,
   cancelButtonText = "Cancel",
   onCancel,
+  noCancelButton = false,
   maxWidth = "2xl",
   isLoading = false,
   loadingText = "Processing...",
@@ -98,13 +100,15 @@ export default function BaseForm({
         {children}
 
         <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-gray-700">
-          <button
-            type="button"
-            onClick={handleCancel}
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-          >
-            {cancelButtonText}
-          </button>
+          {!noCancelButton && (
+            <button
+              type="button"
+              onClick={handleCancel}
+              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            >
+              {cancelButtonText}
+            </button>
+          )}
           <button
             type="submit"
             disabled={isLoading}

@@ -35,7 +35,7 @@ interface VaultSettingsFormProps {
 
 export default function VaultSettingsForm({ onClose }: VaultSettingsFormProps) {
   const { address } = useAppKitAccount();
-  const { vault, updateVault, isLoading, error } = useVault();
+  const { vault, /* updateVault, */ isLoading, error } = useVault();
   const router = useRouter();
   const [showGrantAccess, setShowGrantAccess] = useState(false);
   const [showTransferOwnership, setShowTransferOwnership] = useState(false);
@@ -137,21 +137,9 @@ export default function VaultSettingsForm({ onClose }: VaultSettingsFormProps) {
     }
   };
 
-  const handleUpdateVault = async (e: React.FormEvent) => {
+  const handleCloseSettings = async (e: React.FormEvent) => {
     e.preventDefault();
-    const formData = new FormData(e.target as HTMLFormElement);
-    const name = formData.get("name") as string;
-    const description = formData.get("description") as string;
-
-    try {
-      await updateVault({
-        name,
-        description,
-      });
-      router.push("/vaults");
-    } catch (error) {
-      console.error("Error updating vault:", error);
-    }
+    onClose();
   };
 
   const handleUpgradeAccess = (walletAddress: string) => {
@@ -260,11 +248,12 @@ export default function VaultSettingsForm({ onClose }: VaultSettingsFormProps) {
       title="Vault Settings"
       icon={<ShieldCheckIcon className="h-6 w-6" />}
       onClose={onClose}
-      onSubmit={handleUpdateVault}
-      submitButtonText="Save Changes"
+      noCancelButton={true}
+      onSubmit={handleCloseSettings}
+      submitButtonText="Close"
       maxWidth="full"
       isLoading={isLoading}
-      loadingText="Saving changes..."
+      loadingText="Closing..."
       error={error || undefined}
     >
       {/* Tab Navigation */}

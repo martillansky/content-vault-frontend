@@ -24,7 +24,7 @@ interface Vault {
 
 interface VaultContextType {
   vault: Vault | null;
-  updateVault: (data: { name: string; description: string }) => Promise<void>;
+  //updateVault: (data: { name: string; description: string }) => Promise<void>;
   isLoading: boolean;
   error: string | null;
   setVaultId: (id: string) => void;
@@ -91,7 +91,7 @@ export function VaultProvider({ children }: VaultProviderProps) {
     }
   }, [contentResponse, vaultId]);
 
-  const updateVault = async (data: { name: string; description: string }) => {
+  /* const updateVault = async (data: { name: string; description: string }) => {
     setIsLoading(true);
     setError(null);
     try {
@@ -108,13 +108,13 @@ export function VaultProvider({ children }: VaultProviderProps) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }; */
 
   return (
     <VaultContext.Provider
       value={{
         vault,
-        updateVault,
+        //updateVault,
         isLoading: isLoading || isLoadingContent,
         error,
         setVaultId,

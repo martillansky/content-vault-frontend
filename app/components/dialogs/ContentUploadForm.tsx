@@ -1,5 +1,7 @@
 "use client";
 
+import { useVaultTx } from "@/app/contracts/hooks/useVaultTx";
+import { getMockedContent } from "@/app/mockData/private/mockContent";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -13,7 +15,6 @@ import { useState } from "react";
 import LoadingComponent from "../LoadingComponent";
 import BaseForm from "./BaseForm";
 import EncryptionSaltForm from "./EncryptionSaltForm";
-
 interface FileItem {
   id: string;
   name: string;
@@ -32,6 +33,7 @@ export default function ContentUploadForm({
   onClose,
   currentFolder = "root",
 }: FormProps) {
+  const { submitContent } = useVaultTx();
   const { isConnected } = useAppKitAccount();
   const [isOpen, setIsOpen] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -166,15 +168,19 @@ export default function ContentUploadForm({
     setIsLoading(true);
 
     try {
-      // TODO: Implement the actual file upload logic
-      // This would include:
-      // 1. Preparing the file data for each file
-      // 2. Encrypting if needed
-      // 3. Creating metadata
-      // 4. Triggering the blockchain transaction (batched if multiple files)
+      // TODO: Remove this mocked content
+      // Mocked content for demonstration
+      const mockedContent = await getMockedContent();
+
+      await submitContent(
+        mockedContent.tokenId,
+        mockedContent.encryptedCID,
+        mockedContent.isCIDEncrypted,
+        mockedContent.metadata
+      );
 
       // Simulate a delay for demonstration
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      //await new Promise((resolve) => setTimeout(resolve, 2000));
 
       // Close the dialog after successful upload
       setIsOpen(false);

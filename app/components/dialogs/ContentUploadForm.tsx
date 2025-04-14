@@ -1,7 +1,7 @@
 "use client";
 
 import { useStoreContentWithMetadata } from "@/app/contracts/hooks/useStoreContentWithMetadata";
-import { getMockedContent } from "@/app/mockData/private/mockContent";
+//import { getMockedContent } from "@/app/mockData/private/mockContent";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -170,17 +170,17 @@ export default function ContentUploadForm({
     try {
       // TODO: Remove this mocked content
       // Mocked content for demonstration
-      const mockedContent = await getMockedContent();
+      /* const mockedContent = await getMockedContent();
 
       await submitContent(
         mockedContent.tokenId,
         mockedContent.encryptedCID,
         mockedContent.isCIDEncrypted,
         mockedContent.metadata
-      );
+      ); */
 
       // Simulate a delay for demonstration
-      //await new Promise((resolve) => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       // Close the dialog after successful upload
       setIsOpen(false);

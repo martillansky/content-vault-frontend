@@ -2,14 +2,7 @@
 
 import { useUserData } from "@/app/subgraph/hooks/UserData";
 
-import {
-  ArrowRightIcon,
-  EyeIcon,
-  FolderIcon,
-  LockClosedIcon,
-  PencilIcon,
-  UserIcon,
-} from "@heroicons/react/24/outline";
+import { FolderIcon, UserIcon } from "@heroicons/react/24/outline";
 import { useAppKitAccount } from "@reown/appkit/react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -60,9 +53,7 @@ const VaultList: React.FC<VaultListProps> = ({ address }) => {
     return <LoadingComponent text="Loading vaults..." />;
   }
 
-  const vaults: VaultCreated[] = sampleVaults.concat(
-    userData?.userDatas[0].vaultsCreated || []
-  );
+  const vaults: VaultCreated[] = userData?.userDatas[0].vaultsCreated || [];
   const grantedVaults: VaultGranted[] =
     userData?.userDatas[0].vaultAccessesGranted.map((vault) => ({
       ...vault.accessRegistry.vaultCreated,
@@ -72,10 +63,7 @@ const VaultList: React.FC<VaultListProps> = ({ address }) => {
   return (
     <div className="space-y-6">
       {showCreateVaultForm && (
-        <CreateVaultForm
-          //vaultId={vaultId}
-          onClose={() => setShowCreateVaultForm(false)}
-        />
+        <CreateVaultForm onClose={() => setShowCreateVaultForm(false)} />
       )}
 
       {/* Tab Navigation */}

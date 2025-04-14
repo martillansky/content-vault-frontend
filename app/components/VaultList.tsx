@@ -1,7 +1,7 @@
 "use client";
 
-import { useVaults } from "@/app/subgraph/hooks/Vaults";
-import { VaultCreated } from "@/app/subgraph/types/Vaults.types";
+import { useUserData } from "@/app/subgraph/hooks/UserData";
+
 import {
   ArrowRightIcon,
   FolderIcon,
@@ -11,9 +11,14 @@ import { useAppKitAccount } from "@reown/appkit/react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { sampleVaults } from "../mockData/mockData";
+import { VaultCreated, VaultGranted } from "../subgraph/types/UserData.types";
 import CreateVaultForm from "./dialogs/CreateVaultForm";
 import LoadingComponent from "./LoadingComponent";
 
+export enum Permissions {
+  VIEWER = 1,
+  CONTRIBUTOR = 2,
+}
 interface VaultListProps {
   address?: string;
 }
@@ -21,7 +26,8 @@ interface VaultListProps {
 const VaultList: React.FC<VaultListProps> = ({ address }) => {
   const router = useRouter();
   const { isConnected, address: connectedAddress } = useAppKitAccount();
-  const { data: vaultsResponse, isLoading } = useVaults(
+
+  const { data: userData, isLoading: userDataLoading } = useUserData(
     address || connectedAddress || ""
   );
   const [selectedVault, setSelectedVault] = useState<string | null>(null);
@@ -53,13 +59,23 @@ const VaultList: React.FC<VaultListProps> = ({ address }) => {
     );
   }
 
-  if (isLoading) {
+  if (userDataLoading) {
     return <LoadingComponent text="Loading vaults..." />;
   }
 
-  const vaults: VaultCreated[] = sampleVaults.concat(
-    vaultsResponse?.vaultCreateds || []
-  );
+  const vaults: VaultCreated[] = sampleVaults
+    .concat(userData?.userDatas[0].vaultsCreated || [])
+    .concat(
+      userData?.userDatas[0].vaultAccessesGranted.map(
+        (vault) => vault.accessRegistry.vaultCreated
+      ) || []
+    );
+
+  const grantedVaults: VaultGranted[] =
+    userData?.userDatas[0].vaultAccessesGranted.map((vault) => ({
+      ...vault.accessRegistry.vaultCreated,
+      permission: vault.permission,
+    })) || [];
 
   return (
     <div className="space-y-6">

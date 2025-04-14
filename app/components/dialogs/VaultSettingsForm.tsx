@@ -1,5 +1,6 @@
 "use client";
 
+import { useGrantAccess } from "@/app/contracts/hooks/useGrantAccess";
 import {
   ArrowLeftIcon,
   ArrowPathIcon,
@@ -23,7 +24,6 @@ import RevokeAccessForm from "./RevokeAccessForm";
 import TransferOwnershipForm from "./TransferOwnershipForm";
 import UpgradeAccessForm from "./UpgradeAccessForm";
 import WalletAccessTable from "./WalletAccessTable";
-
 interface Wallet {
   address: string;
   role: string;
@@ -35,6 +35,7 @@ interface VaultSettingsFormProps {
 
 export default function VaultSettingsForm({ onClose }: VaultSettingsFormProps) {
   const { address } = useAppKitAccount();
+  const { grantAccess } = useGrantAccess();
   const { vault, /* updateVault, */ isLoading, error } = useVault();
   const router = useRouter();
   const [showGrantAccess, setShowGrantAccess] = useState(false);
@@ -93,13 +94,21 @@ export default function VaultSettingsForm({ onClose }: VaultSettingsFormProps) {
     requireSignature: boolean
   ) => {
     try {
-      // TODO: Implement grant access logic
-      console.log(
-        "Granting access to:",
-        wallets,
-        "with signature:",
-        requireSignature
-      );
+      const tokenId = Number(vault?.id);
+
+      if (wallets.length === 1) {
+        if (!requireSignature) {
+          await grantAccess(wallets[0].address, tokenId, wallets[0].role);
+        } else {
+          // TODO: Implement signature grant access logic
+        }
+      } else if (wallets.length > 1) {
+        if (!requireSignature) {
+          // TODO: Implement batch grant access logic
+        } else {
+          // TODO: Implement signature batch grant access logic
+        }
+      }
       setShowGrantAccess(false);
     } catch (error) {
       console.error("Error granting access:", error);

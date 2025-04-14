@@ -1,6 +1,6 @@
 "use client";
 
-import { useVaultTx } from "@/app/contracts/hooks/useVaultTx";
+import { useStoreContentWithMetadata } from "@/app/contracts/hooks/useStoreContentWithMetadata";
 import { getMockedContent } from "@/app/mockData/private/mockContent";
 import {
   ArrowLeftIcon,
@@ -33,7 +33,7 @@ export default function ContentUploadForm({
   onClose,
   currentFolder = "root",
 }: FormProps) {
-  const { submitContent } = useVaultTx();
+  const { submitContent } = useStoreContentWithMetadata();
   const { isConnected } = useAppKitAccount();
   const [isOpen, setIsOpen] = useState(true);
   const [isLoading, setIsLoading] = useState(false);

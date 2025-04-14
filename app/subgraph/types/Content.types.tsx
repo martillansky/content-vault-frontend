@@ -17,12 +17,3 @@ export interface Content {
 export interface ContentResponse {
   contentStoredWithMetadata_collection: Content[];
 }
-
-enum fieldKeys {
-  description = "description",
-  extension = "extension",
-  name = "name",
-  route = "route",
-  timestamp = "timestamp",
-  type = "type",
-}

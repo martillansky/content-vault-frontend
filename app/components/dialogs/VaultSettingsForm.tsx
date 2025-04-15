@@ -3,18 +3,13 @@
 import { useGrantAccess } from "@/app/contracts/hooks/useGrantAccess";
 import {
   ArrowLeftIcon,
-  ArrowPathIcon,
   ArrowRightIcon,
-  ArrowUpIcon,
   Cog6ToothIcon,
-  ExclamationTriangleIcon,
   ShieldCheckIcon,
-  UserMinusIcon,
   UserPlusIcon,
-  XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { useAppKitAccount } from "@reown/appkit/react";
-import { useRouter } from "next/navigation";
+//import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useVault } from "../../context/VaultContext";
 import LoadingComponent from "../LoadingComponent";
@@ -24,10 +19,6 @@ import RevokeAccessForm from "./RevokeAccessForm";
 import TransferOwnershipForm from "./TransferOwnershipForm";
 import UpgradeAccessForm from "./UpgradeAccessForm";
 import WalletAccessTable from "./WalletAccessTable";
-interface Wallet {
-  address: string;
-  role: string;
-}
 
 interface VaultSettingsFormProps {
   onClose: () => void;
@@ -37,7 +28,7 @@ export default function VaultSettingsForm({ onClose }: VaultSettingsFormProps) {
   const { address } = useAppKitAccount();
   const { grantAccess } = useGrantAccess();
   const { vault, /* updateVault, */ isLoading, error } = useVault();
-  const router = useRouter();
+  //const router = useRouter();
   const [showGrantAccess, setShowGrantAccess] = useState(false);
   const [showTransferOwnership, setShowTransferOwnership] = useState(false);
   const [showUpgradeAccess, setShowUpgradeAccess] = useState(false);

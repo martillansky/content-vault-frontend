@@ -13,7 +13,9 @@ export interface BaseVault {
 }
 
 // Vault created by the user (owns it)
-export interface VaultCreated extends BaseVault {}
+export interface VaultCreated extends BaseVault {
+  tokenId: string;
+}
 
 // Vault the user has access to (granted by someone else)
 export interface VaultGranted extends BaseVault {

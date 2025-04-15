@@ -6,7 +6,7 @@ import { FolderIcon, UserIcon } from "@heroicons/react/24/outline";
 import { useAppKitAccount } from "@reown/appkit/react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { sampleVaults } from "../mockData/mockData";
+//import { sampleVaults } from "../mockData/mockData";
 import { VaultCreated, VaultGranted } from "../subgraph/types/UserData.types";
 import CreateVaultForm from "./dialogs/CreateVaultForm";
 import LoadingComponent from "./LoadingComponent";
@@ -27,12 +27,13 @@ const VaultList: React.FC<VaultListProps> = ({ address }) => {
   const { data: userData, isLoading: userDataLoading } = useUserData(
     address || connectedAddress || ""
   );
-  const [selectedVault, setSelectedVault] = useState<string | null>(null);
+  //const [selectedVault, setSelectedVault] = useState<string | null>(null);
   const [showCreateVaultForm, setShowCreateVaultForm] = useState(false);
   const [activeTab, setActiveTab] = useState<"your" | "granted">("your");
 
   const handleVaultClick = (vaultId: string) => {
-    setSelectedVault(vaultId);
+    //setSelectedVault(vaultId);
+    console.log("vaultId", vaultId);
   };
 
   const handleVaultSelect = (vaultId: string) => {
@@ -115,7 +116,7 @@ const VaultList: React.FC<VaultListProps> = ({ address }) => {
                 No Vaults Found
               </h3>
               <p className="text-gray-500 dark:text-gray-400 mb-6">
-                You don't have any vaults yet. Create your first vault to get
+                You do not have any vaults yet. Create your first vault to get
                 started.
               </p>
             </div>
@@ -144,7 +145,7 @@ const VaultList: React.FC<VaultListProps> = ({ address }) => {
                 No Granted Access Vaults
               </h3>
               <p className="text-gray-500 dark:text-gray-400 mb-6">
-                You don't have access to any vaults granted by other users.
+                You do not have access to any vaults granted by other users.
               </p>
             </div>
           ) : (

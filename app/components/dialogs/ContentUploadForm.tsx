@@ -1,6 +1,6 @@
 "use client";
 
-import { useStoreContentWithMetadata } from "@/app/contracts/hooks/useStoreContentWithMetadata";
+//import { useStoreContentWithMetadata } from "@/app/contracts/hooks/useStoreContentWithMetadata";
 //import { getMockedContent } from "@/app/mockData/private/mockContent";
 import {
   ArrowLeftIcon,
@@ -29,11 +29,10 @@ interface FormProps {
 }
 
 export default function ContentUploadForm({
-  vaultId,
   onClose,
   currentFolder = "root",
 }: FormProps) {
-  const { submitContent } = useStoreContentWithMetadata();
+  //const { submitContent } = useStoreContentWithMetadata();
   const { isConnected } = useAppKitAccount();
   const [isOpen, setIsOpen] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -206,7 +205,9 @@ export default function ContentUploadForm({
     setEncryptionSalt(salt);
     setShowSaltForm(false);
     // Continue with the upload process
-    handleSubmit(new Event("submit") as any);
+    handleSubmit(
+      new Event("submit") as unknown as React.FormEvent<HTMLFormElement>
+    );
   };
 
   const handleSaltCancel = () => {

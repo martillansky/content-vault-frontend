@@ -7,9 +7,8 @@ import LandingPage from "./components/LandingPage";
 import LoadingComponent from "./components/LoadingComponent";
 
 export default function Home() {
-  const { open, close } = useAppKit();
-  const { address, isConnected, caipAddress, status, embeddedWalletInfo } =
-    useAppKitAccount();
+  const { open } = useAppKit();
+  const { isConnected } = useAppKitAccount();
 
   const router = useRouter();
 

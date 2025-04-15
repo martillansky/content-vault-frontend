@@ -27,12 +27,11 @@ export default function CommonLayout({
   backButtonLabel = "Back to Vaults",
   backButtonPath = "/vaults",
 }: CommonLayoutProps) {
-  const { address, isConnected, caipAddress, status, embeddedWalletInfo } =
-    useAppKitAccount();
+  const { address } = useAppKitAccount();
   const { disconnect } = useDisconnect();
-  const { caipNetwork, caipNetworkId, chainId, switchNetwork } =
-    useAppKitNetwork();
-  const { open, close } = useAppKit();
+  const { chainId } = useAppKitNetwork();
+  useAppKitNetwork();
+  const { open } = useAppKit();
   const router = useRouter();
 
   const handleBack = () => {

@@ -3,3 +3,5 @@ const nextConfig = {
   /* config options here */
   devIndicators: true,
 };
+
+export default nextConfig;

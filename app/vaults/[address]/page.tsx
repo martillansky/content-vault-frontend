@@ -9,7 +9,7 @@ import { useEffect } from "react";
 export default function WalletVaultsPage() {
   const { address } = useParams();
   const router = useRouter();
-  const { isConnected, address: connectedAddress } = useAppKitAccount();
+  const { isConnected } = useAppKitAccount();
 
   useEffect(() => {
     if (!isConnected) {

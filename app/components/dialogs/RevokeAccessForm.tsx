@@ -60,8 +60,8 @@ export default function RevokeAccessForm({
         <div className="flex items-center p-4 text-red-800 bg-red-50 dark:bg-red-900/30 dark:text-red-300 rounded-lg">
           <ExclamationTriangleIcon className="h-5 w-5 mr-2 flex-shrink-0" />
           <p className="text-sm">
-            This action will permanently remove the wallet's access to this
-            vault. This cannot be undone.
+            This action will permanently remove the wallet access to this vault.
+            This cannot be undone.
           </p>
         </div>
       </div>

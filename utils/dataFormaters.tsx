@@ -25,7 +25,7 @@ export function contentFormatter(contentArray: Content[]): FileNode {
       content.fields.find((field) => field.key === "route")?.value ?? "";
 
     const routeArray: string[] = route.split("/").slice(1);
-    var parentNode = dataPresenter;
+    let parentNode: FileNode = dataPresenter;
 
     routeArray.forEach((folder: string) => {
       let nextNode = parentNode.children.find((node) => node.name === folder);

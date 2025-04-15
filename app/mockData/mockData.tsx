@@ -107,7 +107,7 @@ export const sampleData: FileNode = {
 };
 
 // Sample vault data mapping
-export const vaultDataMap: Record<string, any> = {
+/* export const vaultDataMap: Record<string, any> = {
   vault1: {
     id: "root",
     name: "Personal Documents",
@@ -222,3 +222,4 @@ export const vaultDataMap: Record<string, any> = {
     ],
   },
 };
+ */

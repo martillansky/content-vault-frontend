@@ -39,8 +39,8 @@ interface VaultProviderProps {
 export function VaultProvider({ children }: VaultProviderProps) {
   const [vaultId, setVaultId] = useState<string | null>(null);
   const [vault, setVault] = useState<Vault | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  /* const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null); */
 
   const { data: contentResponse, isLoading: isLoadingContent } =
     useVaultsContents(vaultId || "");
@@ -115,8 +115,8 @@ export function VaultProvider({ children }: VaultProviderProps) {
       value={{
         vault,
         //updateVault,
-        isLoading: isLoading || isLoadingContent,
-        error,
+        isLoading: /* isLoading ||  */ isLoadingContent,
+        error: null,
         setVaultId,
       }}
     >

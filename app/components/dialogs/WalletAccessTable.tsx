@@ -3,7 +3,7 @@ import {
   ShieldCheckIcon,
   UserMinusIcon,
 } from "@heroicons/react/24/outline";
-import { useState } from "react";
+//import { useState } from "react";
 
 interface WalletAccess {
   address: string;
@@ -22,7 +22,7 @@ interface WalletAccessTableProps {
 
 export default function WalletAccessTable({
   walletAccess,
-  currentOwner,
+  //currentOwner,
   isOwner,
   onUpgradeAccess,
   onRevokeAccess,

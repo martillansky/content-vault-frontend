@@ -151,7 +151,7 @@ export default function EncryptionSaltForm({
 
         <div className="pt-2">
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Keep this salt secure. You'll need it to decrypt your files later.
+            Keep this salt secure. You will need it to decrypt your files later.
           </p>
         </div>
       </div>

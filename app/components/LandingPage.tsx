@@ -6,7 +6,7 @@ import {
   ShieldCheckIcon,
   WalletIcon,
 } from "@heroicons/react/24/outline";
-import { useRouter } from "next/navigation";
+//import { useRouter } from "next/navigation";
 import React from "react";
 
 interface LandingPageProps {
@@ -14,7 +14,7 @@ interface LandingPageProps {
 }
 
 const LandingPage: React.FC<LandingPageProps> = ({ onConnectWallet }) => {
-  const router = useRouter();
+  //const router = useRouter();
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[80vh] text-center px-4">

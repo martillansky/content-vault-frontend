@@ -135,6 +135,6 @@ export function hexToBytes(hex: string): Uint8Array {
   return bytes;
 }
 
-export function metadataJSONToHex(metadata: any): string {
+export function metadataJSONToHex(metadata: object): string {
   return bytesToHex(new TextEncoder().encode(JSON.stringify(metadata)));
 }

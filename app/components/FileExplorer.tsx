@@ -206,7 +206,7 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
             No contents found in this vault
           </h3>
           <p className="text-gray-500 dark:text-gray-400 mb-6">
-            You don't have any contents yet. Create your first content to get
+            You do not have any contents yet. Create your first content to get
             started.
           </p>
         </div>

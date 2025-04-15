@@ -1,6 +1,6 @@
 import { Vault__factory } from "@/app/types";
-import { ethers, Signer, TransactionResponse } from "ethers";
-import { WalletClient } from "viem";
+import { TransactionResponse, Web3Provider } from "@ethersproject/providers";
+import { Signer } from "ethers";
 
 export function getVaultAddress(): string {
   return process.env.NEXT_PUBLIC_VAULT_ADDRESS!;
@@ -10,13 +10,10 @@ export function toBytes(hex: string): string {
   return hex.startsWith("0x") ? hex : `0x${hex}`;
 }
 
-export async function getSignerAndContract(
-  walletClient: WalletClient,
-  address: string
-) {
-  if (!walletClient || !address) throw new Error("Wallet not connected");
+export async function getSignerAndContract(address: string) {
+  if (!address) throw new Error("Wallet not connected");
 
-  const signer: Signer | null = await getSigner(walletClient, address);
+  const signer: Signer | null = getSigner(address);
 
   if (!signer) throw new Error("Signer not found");
 
@@ -24,13 +21,9 @@ export async function getSignerAndContract(
   return { signer, contract };
 }
 
-export const getSigner = async (
-  walletClient: WalletClient,
-  address: string
-) => {
-  if (!walletClient) return null;
-  const provider = new ethers.BrowserProvider(walletClient);
-  return await provider.getSigner(address);
+export const getSigner = (address: string) => {
+  const provider = getEthersProvider();
+  return provider.getSigner(address);
 };
 
 export async function getTransactionReceipt(
@@ -46,4 +39,12 @@ export async function getTransactionReceipt(
   const txResponse = tx as unknown as TransactionResponse;
   const receipt = await signer.provider.waitForTransaction(txResponse.hash);
   return receipt;
+}
+
+export function getEthersProvider(): Web3Provider {
+  if (typeof window !== "undefined" && typeof window.ethereum !== "undefined") {
+    return new Web3Provider(window.ethereum);
+  } else {
+    throw new Error("No injected provider found (e.g., MetaMask).");
+  }
 }

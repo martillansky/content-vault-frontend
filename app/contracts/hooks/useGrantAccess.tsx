@@ -1,9 +1,8 @@
-import { TransactionResponse } from "ethers";
-import { useAccount, useWalletClient } from "wagmi";
+import { TransactionResponse } from "@ethersproject/providers";
+import { useAccount } from "wagmi";
 import { getSignerAndContract, getTransactionReceipt } from "../utils/utils";
 
 export function useGrantAccess() {
-  const { data: walletClient } = useWalletClient();
   const { address } = useAccount();
 
   const grantAccess = async (
@@ -11,10 +10,7 @@ export function useGrantAccess() {
     tokenId: number,
     role: "owner" | "contributor" | "viewer"
   ) => {
-    const { signer, contract } = await getSignerAndContract(
-      walletClient!,
-      address!
-    );
+    const { signer, contract } = await getSignerAndContract(address!);
 
     const permission =
       role === "contributor"

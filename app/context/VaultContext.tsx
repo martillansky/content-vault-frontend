@@ -125,7 +125,7 @@ export function VaultProvider({ children }: VaultProviderProps) {
   );
 }
 
-export function useVault() {
+export function useVaultContext() {
   const context = useContext(VaultContext);
   if (context === undefined) {
     throw new Error("useVault must be used within a VaultProvider");

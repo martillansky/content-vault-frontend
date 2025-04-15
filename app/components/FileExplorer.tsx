@@ -13,7 +13,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useAppKitAccount } from "@reown/appkit/react";
 import React, { useEffect, useMemo, useState } from "react";
-import { useVault } from "../context/VaultContext";
+import { useVaultContext } from "../context/VaultContext";
 import ContentUploadForm from "./dialogs/ContentUploadForm";
 import VaultSettingsForm from "./dialogs/VaultSettingsForm";
 import LoadingComponent from "./LoadingComponent";
@@ -36,7 +36,7 @@ interface FileExplorerProps {
 const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
   const { isConnected } = useAppKitAccount();
   const { data: contentResponse, isLoading } = useVaultsContents(vaultId);
-  const { setVaultId } = useVault();
+  const { setVaultId } = useVaultContext();
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(
     new Set()
   );

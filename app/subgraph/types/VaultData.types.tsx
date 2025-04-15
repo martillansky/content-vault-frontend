@@ -1,4 +1,5 @@
 import { Permissions } from "@/app/components/VaultList";
+import { VaultCreated } from "./UserData.types";
 
 export interface VaultAccessGranted {
   to: string;
@@ -10,6 +11,10 @@ export interface AccessRegistry {
   vaultAccessGranted: VaultAccessGranted;
 }
 
-export interface AccessRegistriesResponse {
+export interface VaultData extends VaultCreated {
   accessRegistries: AccessRegistry[];
+}
+
+export interface VaultDataResponse {
+  vaultCreateds: VaultData[];
 }

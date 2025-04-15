@@ -48,7 +48,10 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
     setVaultId(vaultId);
   }, [vaultId, setVaultId]);
 
-  const content = contentResponse?.contentStoredWithMetadata_collection || [];
+  const content = useMemo(
+    () => contentResponse?.contentStoredWithMetadata_collection || [],
+    [contentResponse]
+  );
   const vaultData = useMemo(() => contentFormatter(content), [content]);
 
   const toggleFolder = (folderId: string) => {

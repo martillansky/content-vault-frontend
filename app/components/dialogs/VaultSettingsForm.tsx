@@ -1,6 +1,8 @@
 "use client";
 
 import { useGrantAccess } from "@/app/contracts/hooks/useGrantAccess";
+import { useAccessRegistries } from "@/app/subgraph/hooks/AccessRegistries";
+import { AccessRegistry } from "@/app/subgraph/types/AccessRegistries.types";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -9,17 +11,16 @@ import {
   UserPlusIcon,
 } from "@heroicons/react/24/outline";
 import { useAppKitAccount } from "@reown/appkit/react";
-//import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useVault } from "../../context/VaultContext";
 import LoadingComponent from "../LoadingComponent";
+import { Permissions } from "../VaultList";
 import BaseForm from "./BaseForm";
 import GrantAccessForm from "./GrantAccessForm";
 import RevokeAccessForm from "./RevokeAccessForm";
 import TransferOwnershipForm from "./TransferOwnershipForm";
 import UpgradeAccessForm from "./UpgradeAccessForm";
 import WalletAccessTable from "./WalletAccessTable";
-
 interface VaultSettingsFormProps {
   onClose: () => void;
 }
@@ -28,7 +29,8 @@ export default function VaultSettingsForm({ onClose }: VaultSettingsFormProps) {
   const { address } = useAppKitAccount();
   const { grantAccess } = useGrantAccess();
   const { vault, /* updateVault, */ isLoading, error } = useVault();
-  //const router = useRouter();
+  const { data: accessRegistries, isLoading: isLoadingAccessRegistries } =
+    useAccessRegistries(vault!.id);
   const [showGrantAccess, setShowGrantAccess] = useState(false);
   const [showTransferOwnership, setShowTransferOwnership] = useState(false);
   const [showUpgradeAccess, setShowUpgradeAccess] = useState(false);
@@ -43,42 +45,48 @@ export default function VaultSettingsForm({ onClose }: VaultSettingsFormProps) {
     }>
   >([]);
 
-  // Mock data for testing
-  const mockWallets = [
-    {
-      address: address || "0x1234567890123456789012345678901234567890",
-      role: "owner",
-    },
-    {
-      address: "0x2345678901234567890123456789012345678901",
-      role: "contributor",
-    },
-    {
-      address: "0x3456789012345678901234567890123456789012",
-      role: "viewer",
-    },
-  ];
+  const wallets = useMemo(() => {
+    return accessRegistries?.accessRegistries
+      .map((registry: AccessRegistry) => ({
+        address: registry.vaultAccessGranted.to,
+        role:
+          registry.vaultAccessGranted.permission === Permissions.CONTRIBUTOR
+            ? "contributor"
+            : "viewer",
+        grantedAt: registry.vaultAccessGranted.blockTimestamp,
+      }))
+      .concat({
+        address: address || "",
+        role: "owner",
+        grantedAt: "",
+      });
+  }, [accessRegistries, address]);
 
   // Mock vault data for testing
-  const mockVault = {
-    id: "mock-vault-id",
-    name: "My Content Vault",
-    description: "A secure vault for storing and managing my digital content.",
-    wallets: mockWallets,
-  };
+  const mockVault = useMemo(
+    () => ({
+      id: "mock-vault-id",
+      name: "My Content Vault",
+      description:
+        "A secure vault for storing and managing my digital content.",
+      wallets,
+    }),
+    [wallets]
+  );
 
   // Always use mock data for testing
   const displayVault = mockVault;
 
   useEffect(() => {
-    // Always use mock data for testing
-    const formattedMockWallets = mockWallets.map((wallet) => ({
-      address: wallet.address,
-      role: wallet.role as "owner" | "contributor" | "viewer",
-      grantedAt: new Date().toISOString(),
-    }));
-    setWalletAccess(formattedMockWallets);
-  }, [address]);
+    const formattedWallets = wallets?.map((wallet) => {
+      return {
+        address: wallet.address,
+        role: wallet.role as "owner" | "contributor" | "viewer",
+        grantedAt: wallet.grantedAt,
+      };
+    });
+    setWalletAccess(formattedWallets || []);
+  }, [address, wallets]);
 
   const handleGrantAccess = async (
     wallets: Array<{ address: string; role: "contributor" | "viewer" }>,
@@ -184,14 +192,14 @@ export default function VaultSettingsForm({ onClose }: VaultSettingsFormProps) {
     }
   };
 
-  if (isLoading) {
+  if (isLoading || isLoadingAccessRegistries) {
     return <LoadingComponent text="Loading vault settings..." />;
   }
 
   if (showTransferOwnership) {
     return (
       <TransferOwnershipForm
-        existingWallets={displayVault.wallets.map((w) => w.address)}
+        existingWallets={displayVault.wallets?.map((w) => w.address) || []}
         onCancel={() => {
           console.log("TransferOwnershipForm: onCancel called");
           setShowTransferOwnership(false);
@@ -204,7 +212,7 @@ export default function VaultSettingsForm({ onClose }: VaultSettingsFormProps) {
   if (showGrantAccess) {
     return (
       <GrantAccessForm
-        existingWallets={displayVault.wallets.map((w) => w.address)}
+        existingWallets={displayVault.wallets?.map((w) => w.address) || []}
         onCancel={() => setShowGrantAccess(false)}
         onGrantAccess={handleGrantAccess}
       />
@@ -238,7 +246,7 @@ export default function VaultSettingsForm({ onClose }: VaultSettingsFormProps) {
   }
 
   // Find the owner wallet
-  const ownerWallet = displayVault.wallets.find(
+  const ownerWallet = displayVault.wallets?.find(
     (wallet) => wallet.role === "owner"
   );
   const ownerAddress = ownerWallet?.address || "";
@@ -252,7 +260,7 @@ export default function VaultSettingsForm({ onClose }: VaultSettingsFormProps) {
       onSubmit={handleCloseSettings}
       submitButtonText="Close"
       maxWidth="full"
-      isLoading={isLoading}
+      isLoading={isLoading || isLoadingAccessRegistries}
       loadingText="Closing..."
       error={error || undefined}
     >

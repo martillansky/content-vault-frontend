@@ -54,9 +54,9 @@ const VaultList: React.FC<VaultListProps> = ({ address }) => {
     return <LoadingComponent text="Loading vaults..." />;
   }
 
-  const vaults: VaultCreated[] = userData?.userDatas[0].vaultsCreated || [];
+  const vaults: VaultCreated[] = userData?.userDatas[0]?.vaultsCreated || [];
   const grantedVaults: VaultGranted[] =
-    userData?.userDatas[0].vaultAccessesGranted.map((vault) => ({
+    userData?.userDatas[0]?.vaultAccessesGranted.map((vault) => ({
       ...vault.accessRegistry.vaultCreated,
       permission: vault.permission,
     })) || [];

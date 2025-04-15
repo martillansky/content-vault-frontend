@@ -8,6 +8,8 @@ const GET_USER_DATA = gql`
     userDatas(where: { user: $user }) {
       vaultsCreated {
         tokenId
+        name
+        description
         schemaCID
         blockTimestamp
       }
@@ -17,6 +19,8 @@ const GET_USER_DATA = gql`
         accessRegistry {
           vaultCreated {
             tokenId
+            name
+            description
             schemaCID
             blockTimestamp
           }

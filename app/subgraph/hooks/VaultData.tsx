@@ -8,6 +8,8 @@ const GET_VAULT_DATA = gql`
     vaultCreateds(where: { tokenId: $tokenId }) {
       tokenId
       owner
+      name
+      description
       blockTimestamp
       accessRegistries {
         vaultAccessGranted {

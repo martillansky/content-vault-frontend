@@ -28,7 +28,7 @@ interface VaultSettingsFormProps {
 export default function VaultSettingsForm({ onClose }: VaultSettingsFormProps) {
   const { address } = useAppKitAccount();
   const { grantAccess } = useGrantAccess();
-  const { vault, /* updateVault, */ isLoading, error } = useVaultContext();
+  const { vault, isLoading, error } = useVaultContext();
   const { data: vaultData, isLoading: isLoadingVaultData } = useVaultData(
     vault!.id
   );
@@ -71,24 +71,14 @@ export default function VaultSettingsForm({ onClose }: VaultSettingsFormProps) {
     );
   }, [vaultData]);
 
-  // Mock vault data for testing
   const displayVault = useMemo(
-    () => ({
-      id: "mock-vault-id",
-      name: "My Content Vault",
-      description:
-        "A secure vault for storing and managing my digital content.",
-      wallets,
-    }),
-    /* 
     () => ({
       id: vault?.id,
       name: vault?.name,
       description: vault?.description,
       wallets,
     }),
-     */
-    [wallets]
+    [vault, wallets]
   );
 
   useEffect(() => {

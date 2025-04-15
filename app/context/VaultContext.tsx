@@ -7,24 +7,16 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useVaultsContents } from "../subgraph/hooks/Content";
-import { Content } from "../subgraph/types/Content.types";
-
-interface Wallet {
-  address: string;
-  role: string;
-}
-
+import { useVaultData } from "../subgraph/hooks/VaultData";
 interface Vault {
   id: string;
   name: string;
   description: string;
-  wallets: Wallet[];
+  createdAt: string;
 }
 
 interface VaultContextType {
   vault: Vault | null;
-  //updateVault: (data: { name: string; description: string }) => Promise<void>;
   isLoading: boolean;
   error: string | null;
   setVaultId: (id: string) => void;
@@ -39,83 +31,29 @@ interface VaultProviderProps {
 export function VaultProvider({ children }: VaultProviderProps) {
   const [vaultId, setVaultId] = useState<string | null>(null);
   const [vault, setVault] = useState<Vault | null>(null);
-  /* const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null); */
+  const { data: vaultData, isLoading: isLoadingContent } = useVaultData(
+    vaultId || ""
+  );
 
-  const { data: contentResponse, isLoading: isLoadingContent } =
-    useVaultsContents(vaultId || "");
-
-  const contentFormatterToVault = (content: Content[]) => {
-    if (!content || content.length === 0) {
-      return {
-        id: "",
-        name: "",
-        description: "",
-        wallets: [],
-      };
-    }
-
-    // Get the first content item to extract vault information
-    const firstContent = content[0];
-
-    // Extract fields from the content
-    const fields = firstContent.fields || [];
-
-    // Helper function to find a field value by key
-    const getFieldValue = (key: string): string => {
-      const field = fields.find((f) => f.key === key);
-      return field ? field.value : "";
-    };
-
-    return {
-      id: firstContent.id || "",
-      name: getFieldValue("name") || "Untitled Vault",
-      description: getFieldValue("description") || "",
-      wallets: [], // We don't have wallet information in the Content type
-    };
-  };
   useEffect(() => {
-    if (contentResponse?.contentStoredWithMetadata_collection) {
-      const content = contentResponse.contentStoredWithMetadata_collection;
-      const vaultData = contentFormatterToVault(content);
-
-      // Create a vault object from the content data
+    if (vaultData?.vaultCreateds && vaultData?.vaultCreateds?.length > 0) {
+      const content = vaultData?.vaultCreateds[0];
       const vaultObject: Vault = {
         id: vaultId || "",
-        name: vaultData.name || "Untitled Vault",
-        description: vaultData.description || "",
-        wallets: vaultData.wallets || [],
+        name: content.name || "Untitled Vault",
+        description: content.description || "",
+        createdAt: content.blockTimestamp || "",
       };
 
       setVault(vaultObject);
     }
-  }, [contentResponse, vaultId]);
-
-  /* const updateVault = async (data: { name: string; description: string }) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      // TODO: Implement actual vault update logic
-      if (vault) {
-        setVault({
-          ...vault,
-          ...data,
-        });
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to update vault");
-      throw err;
-    } finally {
-      setIsLoading(false);
-    }
-  }; */
+  }, [vaultData, vaultId]);
 
   return (
     <VaultContext.Provider
       value={{
         vault,
-        //updateVault,
-        isLoading: /* isLoading ||  */ isLoadingContent,
+        isLoading: isLoadingContent,
         error: null,
         setVaultId,
       }}

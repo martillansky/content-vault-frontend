@@ -29,7 +29,7 @@ export default function CommonLayout({
 }: CommonLayoutProps) {
   const { address } = useAppKitAccount();
   const { disconnect } = useDisconnect();
-  const { chainId } = useAppKitNetwork();
+  const { caipNetwork } = useAppKitNetwork();
   useAppKitNetwork();
   const { open } = useAppKit();
   const router = useRouter();
@@ -71,7 +71,7 @@ export default function CommonLayout({
                 <div className="flex items-center space-x-3">
                   <div className="bg-blue-100 dark:bg-blue-900/30 px-3 py-1 rounded-full text-sm text-blue-800 dark:text-blue-300">
                     {address}
-                    {chainId && ` Chain: ${chainId}`}
+                    {caipNetwork && ` (${caipNetwork.name})`}
                   </div>
                   <button
                     onClick={() => open({ view: "Networks" })}

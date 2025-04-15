@@ -36,7 +36,7 @@ interface FileExplorerProps {
 const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
   const { isConnected } = useAppKitAccount();
   const { data: contentResponse, isLoading } = useVaultsContents(vaultId);
-  const { setVaultId } = useVaultContext();
+  const { setVaultId, vault } = useVaultContext();
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(
     new Set()
   );
@@ -166,33 +166,23 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
       )}
 
       {showVaultSettings && (
-        <VaultSettingsForm
-          //vaultId={vaultId}
-          onClose={handleVaultSettingsClose}
-        />
+        <VaultSettingsForm onClose={handleVaultSettingsClose} />
       )}
 
       <div className="flex justify-between items-center">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Vault: {vaultId}
+            {vault?.name}
           </h1>
         </div>
         <div className="flex space-x-2">
           <button
             onClick={handleVaultSettingsClick}
-            //className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center space-x-2 shadow-sm hover:shadow-md"
           >
             <Cog6ToothIcon className="h-4 w-4 mr-1" />
             Vault Settings
           </button>
-          {/* <button
-            onClick={() => setShowUploadForm(true)}
-            className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
-            Upload
-          </button> */}
           <button
             className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center space-x-2 shadow-sm hover:shadow-md"
             onClick={() => setShowUploadForm(true)}

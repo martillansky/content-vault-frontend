@@ -121,6 +121,16 @@ const _abi = [
         type: "uint256",
         internalType: "uint256",
       },
+      {
+        name: "name",
+        type: "string",
+        internalType: "string",
+      },
+      {
+        name: "description",
+        type: "string",
+        internalType: "string",
+      },
     ],
     outputs: [],
     stateMutability: "nonpayable",
@@ -1140,6 +1150,18 @@ const _abi = [
         type: "address",
         indexed: true,
         internalType: "address",
+      },
+      {
+        name: "name",
+        type: "string",
+        indexed: false,
+        internalType: "string",
+      },
+      {
+        name: "description",
+        type: "string",
+        indexed: false,
+        internalType: "string",
       },
       {
         name: "schemaCID",

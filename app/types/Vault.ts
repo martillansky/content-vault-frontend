@@ -34,7 +34,7 @@ export interface VaultInterface extends utils.Interface {
     "PERMISSION_WRITE()": FunctionFragment;
     "balanceOf(address,uint256)": FunctionFragment;
     "balanceOfBatch(address[],uint256[])": FunctionFragment;
-    "createVault(uint256)": FunctionFragment;
+    "createVault(uint256,string,string)": FunctionFragment;
     "eip712Domain()": FunctionFragment;
     "getCurrentSchema()": FunctionFragment;
     "getNonce(address)": FunctionFragment;
@@ -140,7 +140,7 @@ export interface VaultInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "createVault",
-    values: [BigNumberish]
+    values: [BigNumberish, string, string]
   ): string;
   encodeFunctionData(
     functionFragment: "eip712Domain",
@@ -414,7 +414,7 @@ export interface VaultInterface extends utils.Interface {
     "URI(string,uint256)": EventFragment;
     "VaultAccessGranted(address,uint256,uint8)": EventFragment;
     "VaultAccessRevoked(address,uint256)": EventFragment;
-    "VaultCreated(uint256,address,string)": EventFragment;
+    "VaultCreated(uint256,address,string,string,string)": EventFragment;
     "VaultTransferred(uint256,address,address)": EventFragment;
   };
 
@@ -570,10 +570,12 @@ export type VaultAccessRevokedEventFilter =
 export interface VaultCreatedEventObject {
   tokenId: BigNumber;
   owner: string;
+  name: string;
+  description: string;
   schemaCID: string;
 }
 export type VaultCreatedEvent = TypedEvent<
-  [BigNumber, string, string],
+  [BigNumber, string, string, string, string],
   VaultCreatedEventObject
 >;
 
@@ -641,6 +643,8 @@ export interface Vault extends BaseContract {
 
     createVault(
       tokenId: BigNumberish,
+      name: string,
+      description: string,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
@@ -862,6 +866,8 @@ export interface Vault extends BaseContract {
 
   createVault(
     tokenId: BigNumberish,
+    name: string,
+    description: string,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -1077,6 +1083,8 @@ export interface Vault extends BaseContract {
 
     createVault(
       tokenId: BigNumberish,
+      name: string,
+      description: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1379,14 +1387,18 @@ export interface Vault extends BaseContract {
       tokenId?: BigNumberish | null
     ): VaultAccessRevokedEventFilter;
 
-    "VaultCreated(uint256,address,string)"(
+    "VaultCreated(uint256,address,string,string,string)"(
       tokenId?: BigNumberish | null,
       owner?: string | null,
+      name?: null,
+      description?: null,
       schemaCID?: null
     ): VaultCreatedEventFilter;
     VaultCreated(
       tokenId?: BigNumberish | null,
       owner?: string | null,
+      name?: null,
+      description?: null,
       schemaCID?: null
     ): VaultCreatedEventFilter;
 
@@ -1425,6 +1437,8 @@ export interface Vault extends BaseContract {
 
     createVault(
       tokenId: BigNumberish,
+      name: string,
+      description: string,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
@@ -1630,6 +1644,8 @@ export interface Vault extends BaseContract {
 
     createVault(
       tokenId: BigNumberish,
+      name: string,
+      description: string,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 

@@ -1,8 +1,9 @@
 "use client";
 
-import { useGrantAccess } from "@/app/contracts/hooks/useGrantAccess";
-import { useVaultData } from "@/app/subgraph/hooks/VaultData";
-import { AccessRegistry } from "@/app/subgraph/types/VaultData.types";
+import { useVaultContext } from "@/context/VaultContext";
+import { useGrantAccess } from "@/lib/contracts/hooks/useGrantAccess";
+import { useVaultData } from "@/lib/subgraph/hooks/VaultData";
+import { AccessRegistry } from "@/lib/subgraph/types/VaultData.types";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -12,7 +13,6 @@ import {
 } from "@heroicons/react/24/outline";
 import { useAppKitAccount } from "@reown/appkit/react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useVaultContext } from "../../context/VaultContext";
 import LoadingComponent from "../LoadingComponent";
 import { Permissions } from "../VaultList";
 import BaseForm from "./BaseForm";

@@ -1,10 +1,10 @@
 "use client";
 
+import { projectId, wagmiAdapter } from "@/lib/reown";
 import { mainnet, sepolia } from "@reown/appkit/networks";
 import { createAppKit } from "@reown/appkit/react";
 import React, { type ReactNode } from "react";
 import { cookieToInitialState, WagmiProvider, type Config } from "wagmi";
-import { projectId, wagmiAdapter } from "../../config";
 import Providers from "./Providers";
 import ServerContent from "./ServerContent";
 import { VaultProvider } from "./VaultContext";

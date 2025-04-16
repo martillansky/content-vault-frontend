@@ -1,7 +1,7 @@
 import "./globals.css";
 
+import ContextProvider from "@/context";
 import { headers } from "next/headers";
-import ContextProvider from "./context";
 
 export default async function RootLayout({
   children,

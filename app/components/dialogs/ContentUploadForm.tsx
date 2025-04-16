@@ -1,7 +1,8 @@
 "use client";
 
-//import { useStoreContentWithMetadata } from "@/app/contracts/hooks/useStoreContentWithMetadata";
-//import { getMockedContent } from "@/app/mockData/private/mockContent";
+import { buildContentForTX } from "@/app/utils/dataFormaters";
+import { useStoreContentWithMetadata } from "@/lib/contracts/hooks/useStoreContentWithMetadata";
+import { uploadToIPFSBackend } from "@/lib/ipfs/ipfsUpload";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -14,7 +15,7 @@ import { useAppKitAccount } from "@reown/appkit/react";
 import { useState } from "react";
 import LoadingComponent from "../LoadingComponent";
 import BaseForm from "./BaseForm";
-import EncryptionSaltForm from "./EncryptionSaltForm";
+
 interface FileItem {
   id: string;
   name: string;
@@ -32,8 +33,8 @@ export default function ContentUploadForm({
   onClose,
   currentFolder = "root",
 }: FormProps) {
-  //const { submitContent } = useStoreContentWithMetadata();
-  const { isConnected } = useAppKitAccount();
+  const { submitContent } = useStoreContentWithMetadata();
+  const { isConnected, address: connectedAddress } = useAppKitAccount();
   const [isOpen, setIsOpen] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [currentFileIndex, setCurrentFileIndex] = useState(0);
@@ -45,8 +46,6 @@ export default function ContentUploadForm({
     useEncryption: true,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [showSaltForm, setShowSaltForm] = useState(false);
-  const [encryptionSalt, setEncryptionSalt] = useState("");
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -158,28 +157,40 @@ export default function ContentUploadForm({
       return;
     }
 
-    // If encryption is enabled and we don't have a salt, show the salt form
-    if (formData.useEncryption && !encryptionSalt) {
-      setShowSaltForm(true);
-      return;
-    }
-
     setIsLoading(true);
 
     try {
-      // TODO: Remove this mocked content
-      // Mocked content for demonstration
-      /* const mockedContent = await getMockedContent();
+      if (!files[0].file) {
+        throw new Error("No file selected");
+      }
+
+      if (!connectedAddress) {
+        throw new Error("No wallet address found");
+      }
+
+      const { IpfsHash, MimeType, Name, timestamp } = await uploadToIPFSBackend(
+        connectedAddress!.toLowerCase(),
+        files[0].name,
+        files[0].file,
+        formData.useEncryption
+      );
+
+      const content = buildContentForTX(
+        IpfsHash,
+        MimeType,
+        Name,
+        files[0].description,
+        "./images/new3", // TODO: Change this to the current folder
+        timestamp,
+        formData.useEncryption
+      );
 
       await submitContent(
-        mockedContent.tokenId,
-        mockedContent.encryptedCID,
-        mockedContent.isCIDEncrypted,
-        mockedContent.metadata
-      ); */
-
-      // Simulate a delay for demonstration
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+        content.tokenId,
+        content.encryptedCIDHex,
+        content.isCIDEncrypted,
+        content.metadata
+      );
 
       // Close the dialog after successful upload
       setIsOpen(false);
@@ -201,19 +212,6 @@ export default function ContentUploadForm({
     }
   };
 
-  const handleSaltSubmit = (salt: string) => {
-    setEncryptionSalt(salt);
-    setShowSaltForm(false);
-    // Continue with the upload process
-    handleSubmit(
-      new Event("submit") as unknown as React.FormEvent<HTMLFormElement>
-    );
-  };
-
-  const handleSaltCancel = () => {
-    setShowSaltForm(false);
-  };
-
   if (!isConnected) {
     return (
       <div className="text-center py-8">
@@ -230,15 +228,6 @@ export default function ContentUploadForm({
 
   if (!isOpen) {
     return null;
-  }
-
-  if (showSaltForm) {
-    return (
-      <EncryptionSaltForm
-        onSubmit={handleSaltSubmit}
-        onCancel={handleSaltCancel}
-      />
-    );
   }
 
   const currentFile = files[currentFileIndex];

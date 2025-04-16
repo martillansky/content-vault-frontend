@@ -32,7 +32,7 @@
     "**/*.ts",
     "**/*.tsx",
     "next-env.d.ts",
-    "types/**/*.d.ts",
+    "lib/crypto/types/**/*.d.ts",
     ".next/types/**/*.ts"
   ],
   "exclude": [

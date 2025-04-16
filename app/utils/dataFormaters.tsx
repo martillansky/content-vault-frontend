@@ -1,5 +1,6 @@
 import { FileNode } from "@/app/components/FileExplorer";
-import { Content } from "@/app/subgraph/types/Content.types";
+import { metadataJSONToHex } from "@/lib/crypto/secureEncryption_Multiformats";
+import { Content } from "@/lib/subgraph/types/Content.types";
 
 export const formatFileSize = (bytes: number) => {
   if (bytes === 0) return "0 Bytes";
@@ -67,4 +68,47 @@ export function contentFormatter(contentArray: Content[]): FileNode {
     parentNode.children.push(nodeFile);
   });
   return dataPresenter;
+}
+
+export function buildContentForTX(
+  ipfsCIDHex: string,
+  mimeType: string,
+  name: string,
+  description: string,
+  route: string,
+  timestamp: string,
+  isCIDEncrypted: boolean
+) {
+  const metadata = {
+    name: name,
+    extension: mimeType.split("/")[1] ?? "unknown",
+    route: route,
+    type: mimeType,
+    description: description,
+    timestamp: timestamp,
+  };
+
+  const metadataHex = metadataJSONToHex(metadata);
+
+  return {
+    tokenId: 1,
+    encryptedCIDHex: ipfsCIDHex,
+    isCIDEncrypted,
+    metadata: metadataHex,
+  };
+}
+
+export function formatTimestampShort(timestamp: string) {
+  return new Date(Number(timestamp) * 1000).toLocaleString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+}
+
+export function formatTimestampLong(timestamp: string) {
+  return new Date(Number(timestamp) * 1000).toString();
 }

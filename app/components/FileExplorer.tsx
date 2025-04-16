@@ -1,9 +1,14 @@
 "use client";
 
-import { useVaultsContents } from "@/app/subgraph/hooks/Content";
-import { Content } from "@/app/subgraph/types/Content.types";
-import { contentFormatter } from "@/utils/dataFormaters";
-import { decryptCIDFromHex } from "@/utils/secureEncryption_Multiformats";
+import {
+  contentFormatter,
+  formatTimestampShort,
+} from "@/app/utils/dataFormaters";
+import { useVaultContext } from "@/context/VaultContext";
+import { decryptCIDFromHex } from "@/lib/crypto/secureEncryption_Multiformats";
+import { useVaultsContents } from "@/lib/subgraph/hooks/Content";
+import { Content } from "@/lib/subgraph/types/Content.types";
+import { retrieveEncryptionPassword } from "@/lib/supabase/userSecretsService";
 import {
   ChevronDownIcon,
   ChevronRightIcon,
@@ -13,11 +18,9 @@ import {
 } from "@heroicons/react/24/outline";
 import { useAppKitAccount } from "@reown/appkit/react";
 import React, { useEffect, useMemo, useState } from "react";
-import { useVaultContext } from "../context/VaultContext";
 import ContentUploadForm from "./dialogs/ContentUploadForm";
 import VaultSettingsForm from "./dialogs/VaultSettingsForm";
 import LoadingComponent from "./LoadingComponent";
-
 export interface FileNode {
   id: string;
   name: string;
@@ -34,7 +37,7 @@ interface FileExplorerProps {
 }
 
 const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
-  const { isConnected } = useAppKitAccount();
+  const { isConnected, address } = useAppKitAccount();
   const { data: contentResponse, isLoading } = useVaultsContents(vaultId);
   const { setVaultId, vault } = useVaultContext();
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(
@@ -76,13 +79,15 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
         const fileContent = content.find((c: Content) => c.id === file.id);
         if (!fileContent) return;
 
+        if (!address) throw new Error("No wallet address found");
         const encryptedCID = fileContent.encryptedCID;
-        const decrypted = await decryptCIDFromHex(
-          encryptedCID,
-          process.env.NEXT_PUBLIC_SALT || ""
-        );
+        const password = await retrieveEncryptionPassword(address);
+        const decrypted = await decryptCIDFromHex(encryptedCID, password);
 
-        window.open(`https://ipfs.io/ipfs/${decrypted}`, "_blank");
+        window.open(
+          `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}/${decrypted}`,
+          "_blank"
+        );
       } catch (error) {
         console.error("Decryption failed:", error);
       }
@@ -249,7 +254,7 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
                           Created
                         </p>
                         <p className="text-lg font-medium text-gray-900 dark:text-white">
-                          {selectedFile.created}
+                          {formatTimestampShort(selectedFile.created)}
                         </p>
                       </div>
                     )}

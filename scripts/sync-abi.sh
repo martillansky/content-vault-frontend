@@ -7,7 +7,7 @@ CONTRACTS_PATH="../content-vault-contracts"
 VAULT_JSON="$CONTRACTS_PATH/out/Vault.sol/Vault.json"
 
 # Destination in frontend
-DEST_ABI_DIR="./app/contracts"
+DEST_ABI_DIR="./lib/contracts/abis"
 DEST_ABI_FILE="$DEST_ABI_DIR/Vault.json"
 
 # Ensure output folder exists

@@ -112,3 +112,11 @@ export function formatTimestampShort(timestamp: string) {
 export function formatTimestampLong(timestamp: string) {
   return new Date(Number(timestamp) * 1000).toString();
 }
+
+export function isoTsToUnixTs(isoString: string): string {
+  const date = new Date(isoString);
+  if (isNaN(date.getTime())) {
+    throw new Error("Invalid ISO timestamp format");
+  }
+  return String(Math.floor(date.getTime() / 1000));
+}

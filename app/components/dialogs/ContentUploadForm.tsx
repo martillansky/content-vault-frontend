@@ -1,6 +1,6 @@
 "use client";
 
-import { buildContentForTX } from "@/app/utils/dataFormaters";
+import { buildContentForTX, isoTsToUnixTs } from "@/app/utils/dataFormaters";
 import { useStoreContentWithMetadata } from "@/lib/contracts/hooks/useStoreContentWithMetadata";
 import { uploadToIPFSBackend } from "@/lib/ipfs/ipfsUpload";
 import {
@@ -181,7 +181,7 @@ export default function ContentUploadForm({
         Name,
         files[0].description,
         "./images/new3", // TODO: Change this to the current folder
-        timestamp,
+        isoTsToUnixTs(timestamp),
         formData.useEncryption
       );
 

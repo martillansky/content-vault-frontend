@@ -36,7 +36,7 @@ export async function uploadToIPFSBackend(
 
   if (
     !(await validateReceivedHashDerivedKey(
-      walletAddress,
+      normalizedAddress,
       ReturnedHashedDerivedKey
     ))
   ) {

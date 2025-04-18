@@ -15,15 +15,12 @@ async function storeUserSecrets(
   wallet: string,
   secrets: UserSecrets
 ): Promise<void> {
-  const { error } = await supabase.from("user_secrets").upsert(
-    {
-      wallet_address: wallet,
-      password: secrets.password,
-      salt: secrets.salt,
-      response_salt: secrets.response_salt,
-    },
-    { onConflict: "wallet_address" }
-  );
+  const { error } = await supabase.from("user_secrets").insert({
+    wallet_address: wallet,
+    password: secrets.password,
+    salt: secrets.salt,
+    response_salt: secrets.response_salt,
+  });
 
   if (error) throw new Error(`Failed to store secrets: ${error.message}`);
 }
@@ -33,7 +30,7 @@ async function getUserSecrets(wallet: string): Promise<UserSecrets> {
     .from("user_secrets")
     .select("password, salt, response_salt")
     .eq("wallet_address", wallet)
-    .single();
+    .maybeSingle();
 
   if (error) throw new Error(`Failed to fetch secrets: ${error.message}`);
 

@@ -180,7 +180,7 @@ export default function ContentUploadForm({
         MimeType,
         Name,
         files[0].description,
-        "./images/new3", // TODO: Change this to the current folder
+        "./images/new6", // TODO: Change this to the current folder
         isoTsToUnixTs(timestamp),
         formData.useEncryption
       );

@@ -1,4 +1,4 @@
-import { FileNode } from "../components/FileExplorer";
+/* import { FileNode } from "../components/FileExplorer";
 
 // Sample data for demonstration
 export const sampleVaults = [
@@ -105,7 +105,7 @@ export const sampleData: FileNode = {
     },
   ],
 };
-
+ */
 // Sample vault data mapping
 /* export const vaultDataMap: Record<string, any> = {
   vault1: {

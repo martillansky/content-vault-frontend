@@ -117,6 +117,14 @@ export function simpleCIDFromHex(hexStr: string): string {
   return cid.toString();
 }
 
+export function metadataJSONToHex(metadata: object): string {
+  return bytesToHex(new TextEncoder().encode(JSON.stringify(metadata)));
+}
+
+// ------------------------------------------------------------------------------------------------
+// 📦 Helper Functions
+// ------------------------------------------------------------------------------------------------
+
 export function bytesToHex(bytes: Uint8Array): string {
   return (
     "0x" +
@@ -135,6 +143,45 @@ export function hexToBytes(hex: string): Uint8Array {
   return bytes;
 }
 
-export function metadataJSONToHex(metadata: object): string {
-  return bytesToHex(new TextEncoder().encode(JSON.stringify(metadata)));
+export async function deriveHashKey(
+  password: string,
+  salt: string
+): Promise<string> {
+  const keyMaterial = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(password),
+    { name: "PBKDF2" },
+    false,
+    ["deriveBits"]
+  );
+
+  const derivedBits = await crypto.subtle.deriveBits(
+    {
+      name: "PBKDF2",
+      salt: new TextEncoder().encode(salt),
+      iterations: 100_000,
+      hash: "SHA-256",
+    },
+    keyMaterial,
+    256 // 256 bits = 32 bytes
+  );
+
+  return Array.from(new Uint8Array(derivedBits))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+export function generateSecurePassword(): string {
+  // 32 random bytes (256 bits) for high-entropy password
+  const array = crypto.getRandomValues(new Uint8Array(32));
+  return Array.from(array)
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join(""); // 64-character hex string
+}
+
+export function generateSalt(): string {
+  const saltBytes = crypto.getRandomValues(new Uint8Array(16)); // 128-bit salt
+  return Array.from(saltBytes)
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join(""); // 32-character hex string
 }

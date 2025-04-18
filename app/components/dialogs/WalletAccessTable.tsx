@@ -1,3 +1,4 @@
+import { formatTimestampLong } from "@/app/utils/dataFormaters";
 import {
   ArrowUpIcon,
   ShieldCheckIcon,
@@ -76,7 +77,7 @@ export default function WalletAccessTable({
                 </span>
               </td>
               <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-400">
-                {new Date(Number(wallet.grantedAt) * 1000).toString()}
+                {formatTimestampLong(wallet.grantedAt)}
               </td>
               <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                 {isOwner && (

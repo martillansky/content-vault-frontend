@@ -1,4 +1,4 @@
-import { Vault__factory } from "@/app/types";
+import { Vault__factory } from "@/lib/contracts/types";
 import { TransactionResponse, Web3Provider } from "@ethersproject/providers";
 import { Signer } from "ethers";
 

@@ -8,7 +8,11 @@ import {
   PencilIcon,
 } from "@heroicons/react/24/outline";
 import React from "react";
-import { VaultCreated, VaultGranted } from "../subgraph/types/UserData.types";
+import {
+  VaultCreated,
+  VaultGranted,
+} from "../../lib/subgraph/types/UserData.types";
+import { formatTimestampShort } from "../utils/dataFormaters";
 import { Permissions } from "./VaultList";
 
 interface VaultCardProps {
@@ -24,17 +28,6 @@ const VaultCard: React.FC<VaultCardProps> = ({
   onVaultClick,
   onVaultSelect,
 }) => {
-  const formatDate = (dateString: string) => {
-    return new Date(Number(dateString) * 1000).toLocaleString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    });
-  };
-
   const grantedVault = vault as VaultGranted;
   const hasPermission = isGrantedAccess && "permission" in vault;
 
@@ -78,7 +71,7 @@ const VaultCard: React.FC<VaultCardProps> = ({
         {vault.description || "No description available"}
       </p>
       <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400">
-        <span>Created: {formatDate(vault.blockTimestamp)}</span>
+        <span>Created: {formatTimestampShort(vault.blockTimestamp)}</span>
         <span className="flex items-center">
           {hasPermission ? (
             grantedVault.permission === Permissions.VIEWER ? (

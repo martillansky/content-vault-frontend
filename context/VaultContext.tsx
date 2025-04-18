@@ -1,5 +1,6 @@
 "use client";
 
+import { useVaultData } from "@/lib/subgraph/hooks/VaultData";
 import {
   createContext,
   ReactNode,
@@ -7,7 +8,6 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useVaultData } from "../subgraph/hooks/VaultData";
 interface Vault {
   id: string;
   name: string;

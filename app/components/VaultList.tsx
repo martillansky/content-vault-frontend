@@ -1,13 +1,16 @@
 "use client";
 
-import { useUserData } from "@/app/subgraph/hooks/UserData";
+import { useUserData } from "@/lib/subgraph/hooks/UserData";
 
 import { FolderIcon, UserIcon } from "@heroicons/react/24/outline";
 import { useAppKitAccount } from "@reown/appkit/react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 //import { sampleVaults } from "../mockData/mockData";
-import { VaultCreated, VaultGranted } from "../subgraph/types/UserData.types";
+import {
+  VaultCreated,
+  VaultGranted,
+} from "../../lib/subgraph/types/UserData.types";
 import CreateVaultForm from "./dialogs/CreateVaultForm";
 import LoadingComponent from "./LoadingComponent";
 import VaultCard from "./VaultCard";

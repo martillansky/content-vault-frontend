@@ -8,6 +8,7 @@ import {
   ArrowRightIcon,
   DocumentCheckIcon,
   DocumentIcon,
+  ExclamationCircleIcon,
   PlusIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
@@ -31,7 +32,7 @@ interface FormProps {
 
 export default function ContentUploadForm({
   onClose,
-  currentFolder = "root",
+  currentFolder = "./",
 }: FormProps) {
   const { submitContent } = useStoreContentWithMetadata();
   const { isConnected, address: connectedAddress } = useAppKitAccount();
@@ -44,6 +45,7 @@ export default function ContentUploadForm({
   const [formData, setFormData] = useState({
     signMetadata: true,
     useEncryption: true,
+    route: currentFolder,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -64,6 +66,11 @@ export default function ContentUploadForm({
     } else {
       // Update the general form data
       setFormData((prev) => ({ ...prev, [name]: value }));
+
+      // Validate route in real-time
+      if (name === "route") {
+        validateRoute(value);
+      }
     }
 
     // Clear error when user types
@@ -71,6 +78,24 @@ export default function ContentUploadForm({
       setErrors((prev) => {
         const newErrors = { ...prev };
         delete newErrors[name];
+        return newErrors;
+      });
+    }
+  };
+
+  const validateRoute = (route: string) => {
+    if (!route.startsWith("./")) {
+      setErrors((prev) => ({ ...prev, route: "Route must start with './'" }));
+    } else if (route.endsWith("/") || /[<>:"|?*]/.test(route)) {
+      setErrors((prev) => ({
+        ...prev,
+        route: "Route contains invalid characters or ends with '/'",
+      }));
+    } else {
+      // Clear route error if validation passes
+      setErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors.route;
         return newErrors;
       });
     }
@@ -146,6 +171,16 @@ export default function ContentUploadForm({
       newErrors.file = "At least one file is required";
     }
 
+    // Validate route format
+    if (!formData.route.startsWith("./")) {
+      newErrors.route = "Route must start with './'";
+    } else if (
+      formData.route.endsWith("/") ||
+      /[<>:"|?*]/.test(formData.route)
+    ) {
+      newErrors.route = "Route contains invalid characters or ends with '/'";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -180,7 +215,7 @@ export default function ContentUploadForm({
         MimeType,
         Name,
         files[0].description,
-        "./images/new6", // TODO: Change this to the current folder
+        formData.route,
         isoTsToUnixTs(timestamp),
         formData.useEncryption
       );
@@ -283,6 +318,43 @@ export default function ContentUploadForm({
         </div>
 
         <div>
+          <div className="flex items-center justify-between">
+            <label
+              htmlFor="route"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
+              Content Route
+            </label>
+            {errors.route && (
+              <div className="flex items-center text-red-500">
+                <ExclamationCircleIcon className="h-5 w-5 mr-1" />
+                <span className="text-xs">{errors.route}</span>
+              </div>
+            )}
+          </div>
+          <div className="relative">
+            <input
+              type="text"
+              id="route"
+              name="route"
+              value={formData.route}
+              onChange={handleInputChange}
+              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                errors.route
+                  ? "border-red-500"
+                  : "border-gray-300 dark:border-gray-600"
+              } bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400`}
+              placeholder="Enter content route (e.g., ./images/folder)"
+            />
+            {errors.route && (
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div>
           <label
             htmlFor="name"
             className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
@@ -328,15 +400,17 @@ export default function ContentUploadForm({
         </div>
 
         <div>
-          <label
-            htmlFor="file"
-            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-          >
-            File
-          </label>
+          <div className="flex items-center mb-1">
+            <DocumentIcon className="h-5 w-5 text-gray-500 dark:text-gray-400 mr-2" />
+            <label
+              htmlFor="file"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+              File
+            </label>
+          </div>
           <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:border-blue-500 dark:hover:border-blue-400 transition-colors">
             <div className="space-y-1 text-center">
-              <DocumentIcon className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
               <div className="flex text-sm text-gray-600 dark:text-gray-400">
                 <label
                   htmlFor="file-upload"

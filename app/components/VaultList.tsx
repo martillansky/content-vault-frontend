@@ -1,6 +1,7 @@
 "use client";
 
 import { useUserData } from "@/lib/subgraph/hooks/UserData";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { FolderIcon, UserIcon } from "@heroicons/react/24/outline";
 import { useAppKitAccount } from "@reown/appkit/react";
@@ -26,6 +27,7 @@ interface VaultListProps {
 const VaultList: React.FC<VaultListProps> = ({ address }) => {
   const router = useRouter();
   const { isConnected, address: connectedAddress } = useAppKitAccount();
+  const queryClient = useQueryClient();
 
   const { data: userData, isLoading: userDataLoading } = useUserData(
     address || connectedAddress || ""
@@ -67,7 +69,15 @@ const VaultList: React.FC<VaultListProps> = ({ address }) => {
   return (
     <div className="space-y-6">
       {showCreateVaultForm && (
-        <CreateVaultForm onClose={() => setShowCreateVaultForm(false)} />
+        <CreateVaultForm
+          onClose={() => setShowCreateVaultForm(false)}
+          onSuccess={() => {
+            // Refresh the vault list after successful creation
+            queryClient.invalidateQueries({
+              queryKey: ["userData", address || connectedAddress || ""],
+            });
+          }}
+        />
       )}
 
       {/* Tab Navigation */}

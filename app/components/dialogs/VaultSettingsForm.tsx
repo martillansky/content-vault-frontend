@@ -12,6 +12,7 @@ import {
   UserPlusIcon,
 } from "@heroicons/react/24/outline";
 import { useAppKitAccount } from "@reown/appkit/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
 import LoadingComponent from "../LoadingComponent";
 import { Permissions } from "../VaultList";
@@ -32,6 +33,7 @@ export default function VaultSettingsForm({ onClose }: VaultSettingsFormProps) {
   const { data: vaultData, isLoading: isLoadingVaultData } = useVaultData(
     vault!.id
   );
+  const queryClient = useQueryClient();
   const [showGrantAccess, setShowGrantAccess] = useState(false);
   const [showTransferOwnership, setShowTransferOwnership] = useState(false);
   const [showUpgradeAccess, setShowUpgradeAccess] = useState(false);
@@ -113,6 +115,9 @@ export default function VaultSettingsForm({ onClose }: VaultSettingsFormProps) {
         }
       }
       setShowGrantAccess(false);
+      queryClient.invalidateQueries({
+        queryKey: ["vaultData", vault!.id],
+      });
     } catch (error) {
       console.error("Error granting access:", error);
     }

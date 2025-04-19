@@ -82,7 +82,7 @@ export default function GrantAccessForm({
 
     setIsLoading(true);
     try {
-      await onGrantAccess(batchWallets, requireSignature);
+      onGrantAccess(batchWallets, requireSignature);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {

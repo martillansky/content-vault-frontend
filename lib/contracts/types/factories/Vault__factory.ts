@@ -117,11 +117,6 @@ const _abi = [
     name: "createVault",
     inputs: [
       {
-        name: "tokenId",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
         name: "name",
         type: "string",
         internalType: "string",

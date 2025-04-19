@@ -27,12 +27,15 @@ interface FileItem {
 interface FormProps {
   vaultId: string;
   onClose?: () => void;
+  onSuccess?: () => void;
   currentFolder?: string;
 }
 
 export default function ContentUploadForm({
+  vaultId,
   onClose,
   currentFolder = "./",
+  onSuccess,
 }: FormProps) {
   const { submitContent } = useStoreContentWithMetadata();
   const { isConnected, address: connectedAddress } = useAppKitAccount();
@@ -84,6 +87,16 @@ export default function ContentUploadForm({
   };
 
   const validateRoute = (route: string) => {
+    // Skip validation if route is empty
+    if (!route) {
+      setErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors.route;
+        return newErrors;
+      });
+      return;
+    }
+
     if (!route.startsWith("./")) {
       setErrors((prev) => ({ ...prev, route: "Route must start with './'" }));
     } else if (route.endsWith("/") || /[<>:"|?*]/.test(route)) {
@@ -172,11 +185,11 @@ export default function ContentUploadForm({
     }
 
     // Validate route format
-    if (!formData.route.startsWith("./")) {
+    if (formData.route && !formData.route.startsWith("./")) {
       newErrors.route = "Route must start with './'";
     } else if (
-      formData.route.endsWith("/") ||
-      /[<>:"|?*]/.test(formData.route)
+      formData.route &&
+      (formData.route.endsWith("/") || /[<>:"|?*]/.test(formData.route))
     ) {
       newErrors.route = "Route contains invalid characters or ends with '/'";
     }
@@ -221,7 +234,7 @@ export default function ContentUploadForm({
       );
 
       await submitContent(
-        content.tokenId,
+        parseInt(vaultId),
         content.encryptedCIDHex,
         content.isCIDEncrypted,
         content.metadata
@@ -229,6 +242,9 @@ export default function ContentUploadForm({
 
       // Close the dialog after successful upload
       setIsOpen(false);
+      if (onSuccess) {
+        onSuccess();
+      }
       if (onClose) {
         onClose();
       }

@@ -1,6 +1,6 @@
 "use client";
 
-//import { useCreateVault } from "@/app/contracts/hooks/useCreateVault";
+import { useCreateVault } from "@/lib/contracts/hooks/useCreateVault";
 import { FolderPlusIcon, ShieldCheckIcon } from "@heroicons/react/24/outline";
 import { useAppKitAccount } from "@reown/appkit/react";
 import { useState } from "react";
@@ -8,12 +8,12 @@ import LoadingComponent from "../LoadingComponent";
 import BaseForm from "./BaseForm";
 interface FormProps {
   onClose?: () => void;
-  onSuccess?: (vaultId: string) => void;
+  onSuccess?: () => void;
 }
 
 export default function CreateVaultForm({ onClose, onSuccess }: FormProps) {
   const { isConnected } = useAppKitAccount();
-  //const { submitVault } = useCreateVault();
+  const { submitVault } = useCreateVault();
   const [isOpen, setIsOpen] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -74,16 +74,12 @@ export default function CreateVaultForm({ onClose, onSuccess }: FormProps) {
     setIsLoading(true);
 
     try {
-      // TODO: Remove this mocked vault ID
-      //await submitVault(1, formData.name, formData.description);
-
-      // Generate a mock vault ID for demonstration
-      const mockVaultId = `vault-${Date.now()}`;
+      await submitVault(formData.name, formData.description);
 
       // Close the dialog after successful creation
       setIsOpen(false);
       if (onSuccess) {
-        onSuccess(mockVaultId);
+        onSuccess();
       }
       if (onClose) {
         onClose();

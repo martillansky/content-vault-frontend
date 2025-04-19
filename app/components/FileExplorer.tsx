@@ -17,6 +17,7 @@ import {
   FolderIcon,
 } from "@heroicons/react/24/outline";
 import { useAppKitAccount } from "@reown/appkit/react";
+import { useQueryClient } from "@tanstack/react-query";
 import React, { useEffect, useMemo, useState } from "react";
 import ContentUploadForm from "./dialogs/ContentUploadForm";
 import VaultSettingsForm from "./dialogs/VaultSettingsForm";
@@ -39,6 +40,7 @@ interface FileExplorerProps {
 const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
   const { isConnected, address } = useAppKitAccount();
   const { data: contentResponse, isLoading } = useVaultsContents(vaultId);
+  const queryClient = useQueryClient();
   const { setVaultId, vault } = useVaultContext();
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(
     new Set()
@@ -167,6 +169,12 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
         <ContentUploadForm
           vaultId={vaultId}
           onClose={() => setShowUploadForm(false)}
+          onSuccess={() => {
+            // Refresh the contents
+            queryClient.invalidateQueries({
+              queryKey: ["content", vaultId],
+            });
+          }}
         />
       )}
 

@@ -34,7 +34,7 @@ export interface VaultInterface extends utils.Interface {
     "PERMISSION_WRITE()": FunctionFragment;
     "balanceOf(address,uint256)": FunctionFragment;
     "balanceOfBatch(address[],uint256[])": FunctionFragment;
-    "createVault(uint256,string,string)": FunctionFragment;
+    "createVault(string,string)": FunctionFragment;
     "eip712Domain()": FunctionFragment;
     "getCurrentSchema()": FunctionFragment;
     "getNonce(address)": FunctionFragment;
@@ -140,7 +140,7 @@ export interface VaultInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "createVault",
-    values: [BigNumberish, string, string]
+    values: [string, string]
   ): string;
   encodeFunctionData(
     functionFragment: "eip712Domain",
@@ -642,7 +642,6 @@ export interface Vault extends BaseContract {
     ): Promise<[BigNumber[]]>;
 
     createVault(
-      tokenId: BigNumberish,
       name: string,
       description: string,
       overrides?: Overrides & { from?: string }
@@ -865,7 +864,6 @@ export interface Vault extends BaseContract {
   ): Promise<BigNumber[]>;
 
   createVault(
-    tokenId: BigNumberish,
     name: string,
     description: string,
     overrides?: Overrides & { from?: string }
@@ -1082,7 +1080,6 @@ export interface Vault extends BaseContract {
     ): Promise<BigNumber[]>;
 
     createVault(
-      tokenId: BigNumberish,
       name: string,
       description: string,
       overrides?: CallOverrides
@@ -1436,7 +1433,6 @@ export interface Vault extends BaseContract {
     ): Promise<BigNumber>;
 
     createVault(
-      tokenId: BigNumberish,
       name: string,
       description: string,
       overrides?: Overrides & { from?: string }
@@ -1643,7 +1639,6 @@ export interface Vault extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     createVault(
-      tokenId: BigNumberish,
       name: string,
       description: string,
       overrides?: Overrides & { from?: string }

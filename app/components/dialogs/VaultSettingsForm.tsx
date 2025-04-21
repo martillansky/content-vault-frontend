@@ -102,11 +102,12 @@ export default function VaultSettingsForm({ onClose }: VaultSettingsFormProps) {
       const tokenId = Number(vault?.id);
 
       if (wallets.length === 1) {
-        if (!requireSignature) {
-          await grantAccess(wallets[0].address, tokenId, wallets[0].role);
-        } else {
-          // TODO: Implement signature grant access logic
-        }
+        await grantAccess(
+          wallets[0].address,
+          tokenId,
+          wallets[0].role,
+          requireSignature
+        );
       } else if (wallets.length > 1) {
         if (!requireSignature) {
           // TODO: Implement batch grant access logic

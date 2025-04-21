@@ -28,7 +28,6 @@ import type {
 
 export interface VaultInterface extends utils.Interface {
   functions: {
-    "DOMAIN_SEPARATOR()": FunctionFragment;
     "PERMISSION_NONE()": FunctionFragment;
     "PERMISSION_READ()": FunctionFragment;
     "PERMISSION_WRITE()": FunctionFragment;
@@ -57,10 +56,10 @@ export interface VaultInterface extends utils.Interface {
     "setApprovalForAll(address,bool)": FunctionFragment;
     "setSchema(string)": FunctionFragment;
     "setURI(string)": FunctionFragment;
-    "storeContentBatch(uint256,bytes[],bool,bytes[])": FunctionFragment;
-    "storeContentBatchWithSignature(uint256,bytes[],bool,bytes[],uint256,bytes)": FunctionFragment;
-    "storeContentWithMetadata(uint256,bytes,bool,bytes)": FunctionFragment;
-    "storeContentWithMetadataSigned(uint256,bytes,bool,bytes,uint256,bytes)": FunctionFragment;
+    "storeContentBatch(uint256,bytes[],bool,string[])": FunctionFragment;
+    "storeContentBatchWithSignature(uint256,bytes[],bool,string[],uint256,bytes)": FunctionFragment;
+    "storeContentWithMetadata(uint256,bytes,bool,string)": FunctionFragment;
+    "storeContentWithMetadataSigned(uint256,bytes,bool,string,uint256,bytes)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "transferVaultOwnership(uint256,address)": FunctionFragment;
@@ -72,7 +71,6 @@ export interface VaultInterface extends utils.Interface {
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "DOMAIN_SEPARATOR"
       | "PERMISSION_NONE"
       | "PERMISSION_READ"
       | "PERMISSION_WRITE"
@@ -114,10 +112,6 @@ export interface VaultInterface extends utils.Interface {
       | "vaults"
   ): FunctionFragment;
 
-  encodeFunctionData(
-    functionFragment: "DOMAIN_SEPARATOR",
-    values?: undefined
-  ): string;
   encodeFunctionData(
     functionFragment: "PERMISSION_NONE",
     values?: undefined
@@ -217,7 +211,7 @@ export interface VaultInterface extends utils.Interface {
   encodeFunctionData(functionFragment: "setURI", values: [string]): string;
   encodeFunctionData(
     functionFragment: "storeContentBatch",
-    values: [BigNumberish, BytesLike[], boolean, BytesLike[]]
+    values: [BigNumberish, BytesLike[], boolean, string[]]
   ): string;
   encodeFunctionData(
     functionFragment: "storeContentBatchWithSignature",
@@ -225,25 +219,18 @@ export interface VaultInterface extends utils.Interface {
       BigNumberish,
       BytesLike[],
       boolean,
-      BytesLike[],
+      string[],
       BigNumberish,
       BytesLike
     ]
   ): string;
   encodeFunctionData(
     functionFragment: "storeContentWithMetadata",
-    values: [BigNumberish, BytesLike, boolean, BytesLike]
+    values: [BigNumberish, BytesLike, boolean, string]
   ): string;
   encodeFunctionData(
     functionFragment: "storeContentWithMetadataSigned",
-    values: [
-      BigNumberish,
-      BytesLike,
-      boolean,
-      BytesLike,
-      BigNumberish,
-      BytesLike
-    ]
+    values: [BigNumberish, BytesLike, boolean, string, BigNumberish, BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "supportsInterface",
@@ -271,10 +258,6 @@ export interface VaultInterface extends utils.Interface {
     values: [BigNumberish]
   ): string;
 
-  decodeFunctionResult(
-    functionFragment: "DOMAIN_SEPARATOR",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "PERMISSION_NONE",
     data: BytesLike
@@ -404,7 +387,7 @@ export interface VaultInterface extends utils.Interface {
 
   events: {
     "ApprovalForAll(address,address,bool)": EventFragment;
-    "ContentStoredWithMetadata(address,uint256,bytes,bool,bytes,bool)": EventFragment;
+    "ContentStoredWithMetadata(address,uint256,bytes,bool,string,bool)": EventFragment;
     "EIP712DomainChanged()": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "PermissionUpgraded(address,uint256,uint8)": EventFragment;
@@ -621,8 +604,6 @@ export interface Vault extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<[string]>;
-
     PERMISSION_NONE(overrides?: CallOverrides): Promise<[number]>;
 
     PERMISSION_READ(overrides?: CallOverrides): Promise<[number]>;
@@ -773,7 +754,7 @@ export interface Vault extends BaseContract {
       tokenId: BigNumberish,
       encryptedCIDs: BytesLike[],
       areCIDsEncrypted: boolean,
-      metadatas: BytesLike[],
+      metadatas: string[],
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
@@ -781,7 +762,7 @@ export interface Vault extends BaseContract {
       tokenId: BigNumberish,
       encryptedCIDs: BytesLike[],
       areCIDsEncrypted: boolean,
-      metadatas: BytesLike[],
+      metadatas: string[],
       deadline: BigNumberish,
       signature: BytesLike,
       overrides?: Overrides & { from?: string }
@@ -791,7 +772,7 @@ export interface Vault extends BaseContract {
       tokenId: BigNumberish,
       encryptedCID: BytesLike,
       isCIDEncrypted: boolean,
-      metadata: BytesLike,
+      metadata: string,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
@@ -799,7 +780,7 @@ export interface Vault extends BaseContract {
       tokenId: BigNumberish,
       encryptedCID: BytesLike,
       isCIDEncrypted: boolean,
-      metadata: BytesLike,
+      metadata: string,
       deadline: BigNumberish,
       signature: BytesLike,
       overrides?: Overrides & { from?: string }
@@ -842,8 +823,6 @@ export interface Vault extends BaseContract {
       [string, BigNumber] & { owner: string; currentSchemaIndex: BigNumber }
     >;
   };
-
-  DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
 
   PERMISSION_NONE(overrides?: CallOverrides): Promise<number>;
 
@@ -989,7 +968,7 @@ export interface Vault extends BaseContract {
     tokenId: BigNumberish,
     encryptedCIDs: BytesLike[],
     areCIDsEncrypted: boolean,
-    metadatas: BytesLike[],
+    metadatas: string[],
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -997,7 +976,7 @@ export interface Vault extends BaseContract {
     tokenId: BigNumberish,
     encryptedCIDs: BytesLike[],
     areCIDsEncrypted: boolean,
-    metadatas: BytesLike[],
+    metadatas: string[],
     deadline: BigNumberish,
     signature: BytesLike,
     overrides?: Overrides & { from?: string }
@@ -1007,7 +986,7 @@ export interface Vault extends BaseContract {
     tokenId: BigNumberish,
     encryptedCID: BytesLike,
     isCIDEncrypted: boolean,
-    metadata: BytesLike,
+    metadata: string,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -1015,7 +994,7 @@ export interface Vault extends BaseContract {
     tokenId: BigNumberish,
     encryptedCID: BytesLike,
     isCIDEncrypted: boolean,
-    metadata: BytesLike,
+    metadata: string,
     deadline: BigNumberish,
     signature: BytesLike,
     overrides?: Overrides & { from?: string }
@@ -1059,8 +1038,6 @@ export interface Vault extends BaseContract {
   >;
 
   callStatic: {
-    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
-
     PERMISSION_NONE(overrides?: CallOverrides): Promise<number>;
 
     PERMISSION_READ(overrides?: CallOverrides): Promise<number>;
@@ -1197,7 +1174,7 @@ export interface Vault extends BaseContract {
       tokenId: BigNumberish,
       encryptedCIDs: BytesLike[],
       areCIDsEncrypted: boolean,
-      metadatas: BytesLike[],
+      metadatas: string[],
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1205,7 +1182,7 @@ export interface Vault extends BaseContract {
       tokenId: BigNumberish,
       encryptedCIDs: BytesLike[],
       areCIDsEncrypted: boolean,
-      metadatas: BytesLike[],
+      metadatas: string[],
       deadline: BigNumberish,
       signature: BytesLike,
       overrides?: CallOverrides
@@ -1215,7 +1192,7 @@ export interface Vault extends BaseContract {
       tokenId: BigNumberish,
       encryptedCID: BytesLike,
       isCIDEncrypted: boolean,
-      metadata: BytesLike,
+      metadata: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1223,7 +1200,7 @@ export interface Vault extends BaseContract {
       tokenId: BigNumberish,
       encryptedCID: BytesLike,
       isCIDEncrypted: boolean,
-      metadata: BytesLike,
+      metadata: string,
       deadline: BigNumberish,
       signature: BytesLike,
       overrides?: CallOverrides
@@ -1279,7 +1256,7 @@ export interface Vault extends BaseContract {
       approved?: null
     ): ApprovalForAllEventFilter;
 
-    "ContentStoredWithMetadata(address,uint256,bytes,bool,bytes,bool)"(
+    "ContentStoredWithMetadata(address,uint256,bytes,bool,string,bool)"(
       sender?: string | null,
       tokenId?: BigNumberish | null,
       encryptedCID?: null,
@@ -1412,8 +1389,6 @@ export interface Vault extends BaseContract {
   };
 
   estimateGas: {
-    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<BigNumber>;
-
     PERMISSION_NONE(overrides?: CallOverrides): Promise<BigNumber>;
 
     PERMISSION_READ(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1552,7 +1527,7 @@ export interface Vault extends BaseContract {
       tokenId: BigNumberish,
       encryptedCIDs: BytesLike[],
       areCIDsEncrypted: boolean,
-      metadatas: BytesLike[],
+      metadatas: string[],
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
@@ -1560,7 +1535,7 @@ export interface Vault extends BaseContract {
       tokenId: BigNumberish,
       encryptedCIDs: BytesLike[],
       areCIDsEncrypted: boolean,
-      metadatas: BytesLike[],
+      metadatas: string[],
       deadline: BigNumberish,
       signature: BytesLike,
       overrides?: Overrides & { from?: string }
@@ -1570,7 +1545,7 @@ export interface Vault extends BaseContract {
       tokenId: BigNumberish,
       encryptedCID: BytesLike,
       isCIDEncrypted: boolean,
-      metadata: BytesLike,
+      metadata: string,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
@@ -1578,7 +1553,7 @@ export interface Vault extends BaseContract {
       tokenId: BigNumberish,
       encryptedCID: BytesLike,
       isCIDEncrypted: boolean,
-      metadata: BytesLike,
+      metadata: string,
       deadline: BigNumberish,
       signature: BytesLike,
       overrides?: Overrides & { from?: string }
@@ -1618,8 +1593,6 @@ export interface Vault extends BaseContract {
   };
 
   populateTransaction: {
-    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     PERMISSION_NONE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     PERMISSION_READ(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1764,7 +1737,7 @@ export interface Vault extends BaseContract {
       tokenId: BigNumberish,
       encryptedCIDs: BytesLike[],
       areCIDsEncrypted: boolean,
-      metadatas: BytesLike[],
+      metadatas: string[],
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
@@ -1772,7 +1745,7 @@ export interface Vault extends BaseContract {
       tokenId: BigNumberish,
       encryptedCIDs: BytesLike[],
       areCIDsEncrypted: boolean,
-      metadatas: BytesLike[],
+      metadatas: string[],
       deadline: BigNumberish,
       signature: BytesLike,
       overrides?: Overrides & { from?: string }
@@ -1782,7 +1755,7 @@ export interface Vault extends BaseContract {
       tokenId: BigNumberish,
       encryptedCID: BytesLike,
       isCIDEncrypted: boolean,
-      metadata: BytesLike,
+      metadata: string,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
@@ -1790,7 +1763,7 @@ export interface Vault extends BaseContract {
       tokenId: BigNumberish,
       encryptedCID: BytesLike,
       isCIDEncrypted: boolean,
-      metadata: BytesLike,
+      metadata: string,
       deadline: BigNumberish,
       signature: BytesLike,
       overrides?: Overrides & { from?: string }

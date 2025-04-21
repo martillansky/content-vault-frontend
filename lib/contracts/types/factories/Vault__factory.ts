@@ -14,19 +14,6 @@ const _abi = [
   },
   {
     type: "function",
-    name: "DOMAIN_SEPARATOR",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "bytes32",
-        internalType: "bytes32",
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
     name: "PERMISSION_NONE",
     inputs: [],
     outputs: [
@@ -610,8 +597,8 @@ const _abi = [
       },
       {
         name: "metadatas",
-        type: "bytes[]",
-        internalType: "bytes[]",
+        type: "string[]",
+        internalType: "string[]",
       },
     ],
     outputs: [],
@@ -638,8 +625,8 @@ const _abi = [
       },
       {
         name: "metadatas",
-        type: "bytes[]",
-        internalType: "bytes[]",
+        type: "string[]",
+        internalType: "string[]",
       },
       {
         name: "deadline",
@@ -676,8 +663,8 @@ const _abi = [
       },
       {
         name: "metadata",
-        type: "bytes",
-        internalType: "bytes",
+        type: "string",
+        internalType: "string",
       },
     ],
     outputs: [],
@@ -704,8 +691,8 @@ const _abi = [
       },
       {
         name: "metadata",
-        type: "bytes",
-        internalType: "bytes",
+        type: "string",
+        internalType: "string",
       },
       {
         name: "deadline",
@@ -911,9 +898,9 @@ const _abi = [
       },
       {
         name: "metadata",
-        type: "bytes",
+        type: "string",
         indexed: false,
-        internalType: "bytes",
+        internalType: "string",
       },
       {
         name: "isMetadataSigned",

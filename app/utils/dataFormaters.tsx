@@ -1,6 +1,15 @@
 import { FileNode } from "@/app/components/FileExplorer";
-import { metadataJSONToHex } from "@/lib/crypto/secureEncryption_Multiformats";
+//import { metadataJSONToHex } from "@/lib/crypto/secureEncryption_Multiformats";
 import { Content } from "@/lib/subgraph/types/Content.types";
+
+export interface Metadata {
+  name: string;
+  extension: string;
+  route: string;
+  type: string;
+  description: string;
+  timestamp: string;
+}
 
 export const formatFileSize = (bytes: number) => {
   if (bytes === 0) return "0 Bytes";
@@ -79,7 +88,7 @@ export function buildContentForTX(
   timestamp: string,
   isCIDEncrypted: boolean
 ) {
-  const metadata = {
+  const metadata: Metadata = {
     name: name,
     extension: mimeType.split("/")[1] ?? "unknown",
     route: route,
@@ -88,13 +97,16 @@ export function buildContentForTX(
     timestamp: timestamp,
   };
 
-  const metadataHex = metadataJSONToHex(metadata);
+  //const metadataHex = metadataJSONToHex(metadata);
+  //const metadataString = JSON.stringify(metadata);
 
   return {
     tokenId: 1,
     encryptedCIDHex: ipfsCIDHex,
     isCIDEncrypted,
-    metadata: metadataHex,
+    metadata,
+    //metadata: metadataString,
+    //metadata: metadataHex,
   };
 }
 

@@ -1,13 +1,11 @@
 "use client";
 
 import { useUserData } from "@/lib/subgraph/hooks/UserData";
-import { useQueryClient } from "@tanstack/react-query";
-
 import { FolderIcon, UserIcon } from "@heroicons/react/24/outline";
 import { useAppKitAccount } from "@reown/appkit/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-//import { sampleVaults } from "../mockData/mockData";
 import {
   VaultCreated,
   VaultGranted,
@@ -32,7 +30,6 @@ const VaultList: React.FC<VaultListProps> = ({ address }) => {
   const { data: userData, isLoading: userDataLoading } = useUserData(
     address || connectedAddress || ""
   );
-  //const [selectedVault, setSelectedVault] = useState<string | null>(null);
   const [showCreateVaultForm, setShowCreateVaultForm] = useState(false);
   const [activeTab, setActiveTab] = useState<"your" | "granted">("your");
 

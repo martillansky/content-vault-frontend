@@ -237,7 +237,8 @@ export default function ContentUploadForm({
         parseInt(vaultId),
         content.encryptedCIDHex,
         content.isCIDEncrypted,
-        content.metadata
+        content.metadata,
+        formData.signMetadata
       );
 
       // Close the dialog after successful upload

@@ -1,7 +1,7 @@
 "use client";
 
+import CommonLayout from "@/app/components/CommonLayout";
 import React from "react";
-import CommonLayout from "../components/CommonLayout";
 
 export default function VaultsLayout({
   children,

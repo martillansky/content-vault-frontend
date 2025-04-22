@@ -1,9 +1,9 @@
 "use client";
 
+import LoadingComponent from "@/app/components/LoadingComponent";
 import { useAppKitAccount } from "@reown/appkit/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
-import LoadingComponent from "../components/LoadingComponent";
 
 export default function VaultsPage() {
   const { isConnected, address } = useAppKitAccount();

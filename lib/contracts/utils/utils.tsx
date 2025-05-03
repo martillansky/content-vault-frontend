@@ -1,9 +1,41 @@
-import { Vault__factory } from "@/lib/contracts/types";
+import {
+  ForeignCrosschainGranter__factory,
+  ForeignGateway__factory,
+  MasterCrosschainGranter__factory,
+  MasterGateway__factory,
+  ProposalVaultManager__factory,
+  SchemaManager__factory,
+  Vault__factory,
+} from "@/lib/contracts/types";
 import { TransactionResponse, Web3Provider } from "@ethersproject/providers";
 import { Signer } from "ethers";
 
 export function getVaultAddress(): string {
   return process.env.NEXT_PUBLIC_VAULT_ADDRESS!;
+}
+
+export function getMasterCrosschainGranterAddress(): string {
+  return process.env.NEXT_PUBLIC_MASTER_CROSSCHAIN_GRANTER_ADDRESS_SEPOLIA!;
+}
+
+export function getMasterGatewayAddress(): string {
+  return process.env.NEXT_PUBLIC_MASTER_GATEWAY_ADDRESS_SEPOLIA!;
+}
+
+export function getForeignGatewayAddress(): string {
+  return process.env.NEXT_PUBLIC_FOREIGN_GATEWAY_ADDRESS_CHIADO!;
+}
+
+export function getForeignCrosschainGranterAddress(): string {
+  return process.env.NEXT_PUBLIC_FOREIGN_CROSSCHAIN_GRANTER_ADDRESS_CHIADO!;
+}
+
+export function getProposalVaultManagerAddress(): string {
+  return process.env.NEXT_PUBLIC_PROPOSAL_VAULT_MANAGER_ADDRESS_SEPOLIA!;
+}
+
+export function getSchemaManagerAddress(): string {
+  return process.env.NEXT_PUBLIC_SCHEMA_MANAGER_ADDRESS_SEPOLIA!;
 }
 
 export function toBytes(hex: string): string {
@@ -18,7 +50,46 @@ export async function getSignerAndContract(address: string) {
   if (!signer) throw new Error("Signer not found");
 
   const contract = Vault__factory.connect(getVaultAddress(), signer);
-  return { signer, contract };
+  const schemaManager = SchemaManager__factory.connect(
+    getSchemaManagerAddress(),
+    signer
+  );
+
+  const proposalVaultManager = ProposalVaultManager__factory.connect(
+    getProposalVaultManagerAddress(),
+    signer
+  );
+
+  const masterGateway = MasterGateway__factory.connect(
+    getMasterGatewayAddress(),
+    signer
+  );
+
+  const masterCrosschainGranter = MasterCrosschainGranter__factory.connect(
+    getMasterCrosschainGranterAddress(),
+    signer
+  );
+
+  const foreignGateway = ForeignGateway__factory.connect(
+    getForeignGatewayAddress(),
+    signer
+  );
+
+  const foreignCrosschainGranter = ForeignCrosschainGranter__factory.connect(
+    getForeignCrosschainGranterAddress(),
+    signer
+  );
+
+  return {
+    signer,
+    contract,
+    schemaManager,
+    proposalVaultManager,
+    masterGateway,
+    masterCrosschainGranter,
+    foreignGateway,
+    foreignCrosschainGranter,
+  };
 }
 
 export const getSigner = (address: string) => {

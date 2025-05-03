@@ -9,47 +9,32 @@ import type { Vault, VaultInterface } from "../Vault";
 const _abi = [
   {
     type: "constructor",
-    inputs: [],
+    inputs: [
+      {
+        name: "_schemaManager",
+        type: "address",
+        internalType: "address",
+      },
+    ],
     stateMutability: "nonpayable",
   },
   {
     type: "function",
-    name: "PERMISSION_NONE",
-    inputs: [],
-    outputs: [
+    name: "assignVaultFromProposalOwnership",
+    inputs: [
       {
-        name: "",
-        type: "uint8",
-        internalType: "uint8",
+        name: "tokenId",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "masterCrosschainGranter",
+        type: "address",
+        internalType: "address",
       },
     ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "PERMISSION_READ",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint8",
-        internalType: "uint8",
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "PERMISSION_WRITE",
-    inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint8",
-        internalType: "uint8",
-      },
-    ],
-    stateMutability: "view",
+    outputs: [],
+    stateMutability: "nonpayable",
   },
   {
     type: "function",
@@ -101,6 +86,24 @@ const _abi = [
   },
   {
     type: "function",
+    name: "burnVaultAccess",
+    inputs: [
+      {
+        name: "from",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "tokenId",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
     name: "createVault",
     inputs: [
       {
@@ -119,56 +122,26 @@ const _abi = [
   },
   {
     type: "function",
-    name: "eip712Domain",
+    name: "getDomainSeparator",
     inputs: [],
     outputs: [
       {
-        name: "fields",
-        type: "bytes1",
-        internalType: "bytes1",
-      },
-      {
-        name: "name",
-        type: "string",
-        internalType: "string",
-      },
-      {
-        name: "version",
-        type: "string",
-        internalType: "string",
-      },
-      {
-        name: "chainId",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "verifyingContract",
-        type: "address",
-        internalType: "address",
-      },
-      {
-        name: "salt",
+        name: "",
         type: "bytes32",
         internalType: "bytes32",
-      },
-      {
-        name: "extensions",
-        type: "uint256[]",
-        internalType: "uint256[]",
       },
     ],
     stateMutability: "view",
   },
   {
     type: "function",
-    name: "getCurrentSchema",
+    name: "getLastTokenId",
     inputs: [],
     outputs: [
       {
         name: "",
-        type: "string",
-        internalType: "string",
+        type: "uint256",
+        internalType: "uint256",
       },
     ],
     stateMutability: "view",
@@ -178,7 +151,7 @@ const _abi = [
     name: "getNonce",
     inputs: [
       {
-        name: "owner",
+        name: "signer",
         type: "address",
         internalType: "address",
       },
@@ -194,19 +167,8 @@ const _abi = [
   },
   {
     type: "function",
-    name: "getPermission",
-    inputs: [
-      {
-        name: "tokenId",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      {
-        name: "user",
-        type: "address",
-        internalType: "address",
-      },
-    ],
+    name: "getPermissionNone",
+    inputs: [],
     outputs: [
       {
         name: "",
@@ -214,50 +176,43 @@ const _abi = [
         internalType: "uint8",
       },
     ],
-    stateMutability: "view",
+    stateMutability: "pure",
   },
   {
     type: "function",
-    name: "getSchema",
-    inputs: [
-      {
-        name: "index",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    name: "getPermissionRead",
+    inputs: [],
     outputs: [
       {
         name: "",
-        type: "string",
-        internalType: "string",
+        type: "uint8",
+        internalType: "uint8",
       },
     ],
-    stateMutability: "view",
+    stateMutability: "pure",
   },
   {
     type: "function",
-    name: "getVaultOwner",
-    inputs: [
-      {
-        name: "tokenId",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    name: "getPermissionWrite",
+    inputs: [],
     outputs: [
       {
         name: "",
+        type: "uint8",
+        internalType: "uint8",
+      },
+    ],
+    stateMutability: "pure",
+  },
+  {
+    type: "function",
+    name: "getVaultBalance",
+    inputs: [
+      {
+        name: "user",
         type: "address",
         internalType: "address",
       },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "getVaultSchemaIndex",
-    inputs: [
       {
         name: "tokenId",
         type: "uint256",
@@ -331,6 +286,43 @@ const _abi = [
   },
   {
     type: "function",
+    name: "hasGrantedPermission",
+    inputs: [
+      {
+        name: "tokenId",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "user",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "incrementLastTokenId",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
     name: "isApprovedForAll",
     inputs: [
       {
@@ -355,7 +347,55 @@ const _abi = [
   },
   {
     type: "function",
-    name: "lastSchemaIndex",
+    name: "isPermissionVaultRead",
+    inputs: [
+      {
+        name: "tokenId",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "user",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "isPermissionVaultWrite",
+    inputs: [
+      {
+        name: "tokenId",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "user",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "lastTokenId",
     inputs: [],
     outputs: [
       {
@@ -365,6 +405,24 @@ const _abi = [
       },
     ],
     stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "mintVaultAccess",
+    inputs: [
+      {
+        name: "to",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "tokenId",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
   },
   {
     type: "function",
@@ -418,6 +476,19 @@ const _abi = [
         name: "",
         type: "uint8",
         internalType: "uint8",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "proposalVaultManager",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
       },
     ],
     stateMutability: "view",
@@ -515,19 +586,13 @@ const _abi = [
   },
   {
     type: "function",
-    name: "schemaCIDs",
-    inputs: [
-      {
-        name: "",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
+    name: "schemaManager",
+    inputs: [],
     outputs: [
       {
         name: "",
-        type: "string",
-        internalType: "string",
+        type: "address",
+        internalType: "address",
       },
     ],
     stateMutability: "view",
@@ -552,12 +617,66 @@ const _abi = [
   },
   {
     type: "function",
-    name: "setSchema",
+    name: "setPermissionNone",
     inputs: [
       {
-        name: "schemaCID",
-        type: "string",
-        internalType: "string",
+        name: "tokenId",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "user",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "setPermissionRead",
+    inputs: [
+      {
+        name: "tokenId",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "user",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "setPermissionWrite",
+    inputs: [
+      {
+        name: "tokenId",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "user",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "setProposalVaultManager",
+    inputs: [
+      {
+        name: "_manager",
+        type: "address",
+        internalType: "address",
       },
     ],
     outputs: [],
@@ -772,11 +891,6 @@ const _abi = [
         type: "address",
         internalType: "address",
       },
-      {
-        name: "newPermission",
-        type: "uint8",
-        internalType: "uint8",
-      },
     ],
     outputs: [],
     stateMutability: "nonpayable",
@@ -802,26 +916,7 @@ const _abi = [
   },
   {
     type: "function",
-    name: "vaultExists",
-    inputs: [
-      {
-        name: "tokenId",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-    outputs: [
-      {
-        name: "",
-        type: "bool",
-        internalType: "bool",
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "vaults",
+    name: "vaultOwner",
     inputs: [
       {
         name: "",
@@ -831,14 +926,9 @@ const _abi = [
     ],
     outputs: [
       {
-        name: "owner",
+        name: "",
         type: "address",
         internalType: "address",
-      },
-      {
-        name: "currentSchemaIndex",
-        type: "uint256",
-        internalType: "uint256",
       },
     ],
     stateMutability: "view",
@@ -913,12 +1003,6 @@ const _abi = [
   },
   {
     type: "event",
-    name: "EIP712DomainChanged",
-    inputs: [],
-    anonymous: false,
-  },
-  {
-    type: "event",
     name: "OwnershipTransferred",
     inputs: [
       {
@@ -951,31 +1035,6 @@ const _abi = [
         type: "uint256",
         indexed: true,
         internalType: "uint256",
-      },
-      {
-        name: "newPermission",
-        type: "uint8",
-        indexed: false,
-        internalType: "uint8",
-      },
-    ],
-    anonymous: false,
-  },
-  {
-    type: "event",
-    name: "SchemaSet",
-    inputs: [
-      {
-        name: "index",
-        type: "uint256",
-        indexed: true,
-        internalType: "uint256",
-      },
-      {
-        name: "schemaCID",
-        type: "string",
-        indexed: false,
-        internalType: "string",
       },
     ],
     anonymous: false,
@@ -1335,11 +1394,6 @@ const _abi = [
   },
   {
     type: "error",
-    name: "InvalidShortString",
-    inputs: [],
-  },
-  {
-    type: "error",
     name: "InvalidSignature",
     inputs: [],
   },
@@ -1360,12 +1414,12 @@ const _abi = [
   },
   {
     type: "error",
-    name: "NoSchema",
+    name: "NoWritePermission",
     inputs: [],
   },
   {
     type: "error",
-    name: "NoWritePermission",
+    name: "NotProposalVaultManager",
     inputs: [],
   },
   {
@@ -1399,17 +1453,6 @@ const _abi = [
     type: "error",
     name: "SignatureExpired",
     inputs: [],
-  },
-  {
-    type: "error",
-    name: "StringTooLong",
-    inputs: [
-      {
-        name: "str",
-        type: "string",
-        internalType: "string",
-      },
-    ],
   },
   {
     type: "error",

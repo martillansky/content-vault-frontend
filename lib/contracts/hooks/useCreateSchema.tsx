@@ -6,9 +6,9 @@ export function useCreateSchema() {
   const { address } = useAccount();
 
   const submitSchema = async (schemaCIDHex: string) => {
-    const { signer, contract } = await getSignerAndContract(address!);
+    const { signer, schemaManager } = await getSignerAndContract(address!);
 
-    const tx = await contract.setSchema(schemaCIDHex);
+    const tx = await schemaManager.setSchema(schemaCIDHex);
 
     return getTransactionReceipt(signer, tx as unknown as TransactionResponse);
   };

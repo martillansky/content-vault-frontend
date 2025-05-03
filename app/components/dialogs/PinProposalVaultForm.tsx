@@ -1,6 +1,6 @@
 "use client";
 
-import { useCreateVault } from "@/lib/contracts/hooks/useCreateVault";
+import { useCreateVaultFromProposal } from "@/lib/contracts/hooks/useCreateVaultFromProposal";
 import { useSnapshotProposalData } from "@/lib/snapshot-subgraph/hooks/SnapshotProposalData";
 import { ShieldCheckIcon, SparklesIcon } from "@heroicons/react/24/outline";
 import { useAppKitAccount } from "@reown/appkit/react";
@@ -18,7 +18,7 @@ export default function PinProposalVaultForm({
   onSuccess,
 }: FormProps) {
   const { isConnected } = useAppKitAccount();
-  const { submitVault } = useCreateVault();
+  const { submitVaultFromProposal } = useCreateVaultFromProposal();
   const [isOpen, setIsOpen] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -48,7 +48,8 @@ export default function PinProposalVaultForm({
       setIsLoading(true);
 
       try {
-        await submitVault(
+        await submitVaultFromProposal(
+          proposalId,
           snapshotProposalData!.proposal.title,
           snapshotProposalData!.proposal?.body || ""
         );
@@ -171,8 +172,9 @@ export default function PinProposalVaultForm({
               the proposal
             </li>
             <li>
-              • Minting an ERC1155 (crosschain) token to contribute on these
-              vaults is subject to the proposal strategies
+              • Voting power is specified on the proposal strategies and is
+              subject to positive balance of the corresponding token in your
+              wallet.
             </li>
           </ul>
         </div>

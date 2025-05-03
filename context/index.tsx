@@ -1,6 +1,7 @@
 "use client";
 
 import { projectId, wagmiAdapter } from "@/lib/reown";
+import { gnosisChiado } from "@/lib/reown/chains";
 import { mainnet, sepolia } from "@reown/appkit/networks";
 import { createAppKit } from "@reown/appkit/react";
 import React, { type ReactNode } from "react";
@@ -25,7 +26,7 @@ const metadata = {
 createAppKit({
   adapters: [wagmiAdapter],
   projectId,
-  networks: [mainnet, sepolia],
+  networks: [mainnet, sepolia, gnosisChiado],
   defaultNetwork: sepolia,
   metadata: metadata,
   features: {

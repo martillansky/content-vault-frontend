@@ -11,6 +11,7 @@ interface BaseFormProps {
   submitButtonText: string;
   submitButtonIcon?: ReactNode;
   onSubmit: (e: React.FormEvent) => void;
+  submitButtonDisabled?: boolean;
   cancelButtonText?: string;
   onCancel?: () => void;
   noCancelButton?: boolean;
@@ -29,6 +30,7 @@ export default function BaseForm({
   submitButtonText,
   submitButtonIcon,
   onSubmit,
+  submitButtonDisabled = false,
   cancelButtonText = "Cancel",
   onCancel,
   noCancelButton = false,
@@ -111,7 +113,7 @@ export default function BaseForm({
           )}
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={isLoading || submitButtonDisabled}
             className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center space-x-2 shadow-sm hover:shadow-md disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {submitButtonIcon}

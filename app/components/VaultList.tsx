@@ -3,6 +3,7 @@
 import { useUserData } from "@/lib/subgraph/hooks/UserData";
 import {
   VaultCreated,
+  VaultFromProposal,
   VaultGranted,
 } from "@/lib/subgraph/types/UserData.types";
 import {
@@ -17,6 +18,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import CreateVaultForm from "./dialogs/CreateVaultForm";
 import PinProposalVaultForm from "./dialogs/PinProposalVaultForm";
+import UpgradeVaultFromProposalForm from "./dialogs/UpgradeVaultFromProposalForm";
 import LoadingComponent from "./LoadingComponent";
 import VaultCard from "./VaultCard";
 
@@ -67,9 +69,21 @@ const VaultList: React.FC<VaultListProps> = ({ address }) => {
   const [showCreateVaultForm, setShowCreateVaultForm] = useState(false);
   const [showPinProposalVaultForm, setShowPinProposalVaultForm] =
     useState(false);
+  const [
+    showUpgradeVaultFromProposalForm,
+    setShowUpgradeVaultFromProposalForm,
+  ] = useState(false);
+  const [selectedVaultFromProposal, setSelectedVaultFromProposal] = useState<
+    VaultFromProposal | undefined
+  >();
   const [activeTab, setActiveTab] = useState<"your" | "granted" | "proposals">(
     "your"
   );
+
+  const handlePermissionClick = (vault: VaultFromProposal) => {
+    setSelectedVaultFromProposal(vault);
+    setShowUpgradeVaultFromProposalForm(true);
+  };
 
   const handleVaultClick = (vaultId: string) => {
     //setSelectedVault(vaultId);
@@ -101,6 +115,12 @@ const VaultList: React.FC<VaultListProps> = ({ address }) => {
       permission: vault.permission,
     })) || [];
 
+  const vaultsFromProposal: VaultFromProposal[] =
+    userData?.userDatas[0]?.vaultsFromProposalPinned.map((vault) => ({
+      ...vault.vaultFromProposal,
+      permission: vault.permission,
+    })) || [];
+
   return (
     <div className="space-y-6">
       {showCreateVaultForm && (
@@ -118,9 +138,22 @@ const VaultList: React.FC<VaultListProps> = ({ address }) => {
         <PinProposalVaultForm
           onClose={() => setShowPinProposalVaultForm(false)}
           onSuccess={() => {
-            /* queryClient.invalidateQueries({
-                queryKey: ["snapshotProposalData", newProposalId],
-              }); */
+            // Refresh the vault list after successful creation
+            queryClient.invalidateQueries({
+              queryKey: ["userData", address || connectedAddress || ""],
+            });
+          }}
+        />
+      )}
+      {showUpgradeVaultFromProposalForm && (
+        <UpgradeVaultFromProposalForm
+          vault={selectedVaultFromProposal!}
+          onClose={() => setShowUpgradeVaultFromProposalForm(false)}
+          onSuccess={() => {
+            // Refresh the vault list after successful creation
+            queryClient.invalidateQueries({
+              queryKey: ["userData", address || connectedAddress || ""],
+            });
           }}
         />
       )}
@@ -245,7 +278,7 @@ const VaultList: React.FC<VaultListProps> = ({ address }) => {
       {/* Snapshot Proposal Vaults Tab */}
       {activeTab === "proposals" && (
         <>
-          {grantedVaults.length === 0 ? (
+          {vaultsFromProposal.length === 0 ? (
             <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-8 text-center">
               <SparklesIcon className="h-16 w-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
               <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-2">
@@ -257,13 +290,14 @@ const VaultList: React.FC<VaultListProps> = ({ address }) => {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {grantedVaults.map((vault: VaultGranted) => (
+              {vaultsFromProposal.map((vault: VaultFromProposal) => (
                 <VaultCard
                   key={vault.tokenId}
                   vault={vault}
-                  isGrantedAccess={true}
+                  isVaultFromProposal={true}
                   onVaultClick={handleVaultClick}
                   onVaultSelect={handleVaultSelect}
+                  onPermissionClick={() => handlePermissionClick(vault)}
                 />
               ))}
             </div>

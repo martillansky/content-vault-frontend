@@ -26,6 +26,20 @@ const GET_USER_DATA = gql`
           }
         }
       }
+      vaultsFromProposalPinned {
+        tokenId
+        permission
+        vaultFromProposal {
+          proposalId
+          tokenId
+          name
+          description
+          chainId
+          tokenContract
+          schemaCID
+          blockTimestamp
+        }
+      }
     }
   }
 `;

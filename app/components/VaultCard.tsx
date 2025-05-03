@@ -83,7 +83,7 @@ const VaultCard: React.FC<VaultCardProps> = ({
         <span>Created: {formatTimestampShort(vault.blockTimestamp)}</span>
         <span className="flex items-center">
           {hasPermission ? (
-            vault.permission === Permissions.VIEWER ? (
+            vault.permission.permission === Permissions.VIEWER ? (
               <div
                 onClick={(e) => {
                   e.stopPropagation();

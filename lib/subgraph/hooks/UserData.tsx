@@ -15,7 +15,9 @@ const GET_USER_DATA = gql`
       }
       vaultAccessesGranted {
         tokenId
-        permission
+        permission {
+          permission
+        }
         accessRegistry {
           vaultCreated {
             tokenId
@@ -28,7 +30,9 @@ const GET_USER_DATA = gql`
       }
       vaultsFromProposalPinned {
         tokenId
-        permission
+        permission {
+          permission
+        }
         vaultFromProposal {
           proposalId
           tokenId

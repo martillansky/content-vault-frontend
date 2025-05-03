@@ -15,7 +15,9 @@ const GET_VAULT_DATA = gql`
         vaultAccessGranted {
           tokenId
           to
-          permission
+          permission {
+            permission
+          }
           blockTimestamp
         }
       }

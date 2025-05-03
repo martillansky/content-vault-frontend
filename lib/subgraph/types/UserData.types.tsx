@@ -17,14 +17,18 @@ export interface VaultCreated extends BaseVault {
   tokenId: string;
 }
 
+export interface Permission {
+  permission: Permissions;
+}
+
 // Vault the user has access to (granted by someone else)
 export interface VaultGranted extends BaseVault {
-  permission: Permissions;
+  permission: Permission;
 }
 
 // Vault from proposal pinned by the user
 export interface VaultFromProposal extends BaseVault {
-  permission: Permissions;
+  permission: Permission;
   chainId: string;
   tokenContract: string;
   proposalId: string;
@@ -33,13 +37,16 @@ export interface VaultFromProposal extends BaseVault {
 // Structure for vault access granted to the user
 export interface VaultAccessGranted {
   tokenId: string;
-  permission: number;
+  //permission: number;
+  permission: Permission;
   accessRegistry: AccessRegistry;
 }
 
 export interface VaultFromProposalPinned {
   tokenId: string;
-  permission: number;
+  //permission: number;
+  permission: Permission;
+
   /* accessRegistries: AccessRegistry; */
   vaultFromProposal: VaultFromProposal;
 }

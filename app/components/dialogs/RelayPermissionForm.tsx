@@ -54,6 +54,7 @@ export default function RelayPermissionForm({
     } catch (error) {
       console.error("Upgrade failed:", error);
       setErrors({ submit: "Failed to upgrade vault. Please try again." });
+      setIsLoading(false);
     }
   };
 

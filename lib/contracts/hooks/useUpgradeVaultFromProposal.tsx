@@ -1,7 +1,6 @@
 import { networks } from "@/lib/reown";
 import { gnosisChiado } from "@/lib/reown/chains";
 import { TransactionResponse } from "@ethersproject/providers";
-import { sepolia } from "@reown/appkit/networks";
 import { useQuery } from "@tanstack/react-query";
 import { ethers } from "ethers";
 import { useAccount } from "wagmi";
@@ -28,23 +27,24 @@ export function useUpgradeVaultFromProposal() {
   const getSignaturesAndRelayCrosschainUpgrade = async (_txHash: string) => {
     const { signer } = await getSignerAndContract(address!);
 
-    const txRelay = await getTransactionReceipt(
-      signer,
-      _txHash as unknown as TransactionResponse
+    const provider = new ethers.providers.JsonRpcProvider(
+      gnosisChiado.rpcUrls.default.http[0]
     );
-    const data = txRelay.logs.at(1)?.data;
+    const txRelayReceipt = await provider.getTransactionReceipt(_txHash);
+    const amBridgeChiado = process.env.NEXT_PUBLIC_FOREIGN_BRIDGE_CHIADO;
 
-    const subEndChiado = 754; // 748 in case Gnosis mainnet;
-    const _message = `0x${data?.substring(130, subEndChiado)}` as `0x${string}`;
+    const data = txRelayReceipt.logs.find(
+      (log) => log.address === amBridgeChiado
+    )?.data;
+
+    const _message = `0x${data?.substring(130, 626)}` as `0x${string}`;
 
     const ambBridgeHelperAddress =
       process.env.NEXT_PUBLIC_AMBBRIDGE_HELPER_CHIADO;
     if (!ambBridgeHelperAddress) {
       throw new Error("AMB Bridge Helper address not found");
     }
-    const provider = new ethers.providers.JsonRpcProvider(
-      gnosisChiado.rpcUrls.default.http[0]
-    );
+
     const contract = new ethers.Contract(
       ambBridgeHelperAddress,
       ambBridgeHelperAbi,
@@ -58,17 +58,15 @@ export function useUpgradeVaultFromProposal() {
     if (!ambBridgeSepoliaAddress) {
       throw new Error("AMB Bridge Sepolia address not found");
     }
-    const providerSepolia = new ethers.providers.JsonRpcProvider(
-      sepolia.rpcUrls.default.http[0]
-    );
+
     const contractSepolia = new ethers.Contract(
       ambBridgeSepoliaAddress,
       ambBridgeSepoliaAbi,
-      providerSepolia
+      signer
     );
 
     // Relay on Sepolia
-    const tx = await contractSepolia.executeSignatures(signatures, _message, {
+    const tx = await contractSepolia.executeSignatures(_message, signatures, {
       gasLimit: 5_000_000,
     });
 

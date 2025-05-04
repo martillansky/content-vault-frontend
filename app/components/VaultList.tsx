@@ -1,6 +1,7 @@
 "use client";
 
 import { useUserData } from "@/lib/subgraph/hooks/UserData";
+import { useVFPPendingUpgrade } from "@/lib/subgraph/hooks/VFPPermissionUpgradeRequested";
 import {
   VaultCreated,
   VaultFromProposal,
@@ -18,6 +19,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import CreateVaultForm from "./dialogs/CreateVaultForm";
 import PinProposalVaultForm from "./dialogs/PinProposalVaultForm";
+import RelayPermissionForm from "./dialogs/RelayPermissionForm";
 import UpgradeVaultFromProposalForm from "./dialogs/UpgradeVaultFromProposalForm";
 import LoadingComponent from "./LoadingComponent";
 import VaultCard from "./VaultCard";
@@ -73,6 +75,7 @@ const VaultList: React.FC<VaultListProps> = ({ address }) => {
     showUpgradeVaultFromProposalForm,
     setShowUpgradeVaultFromProposalForm,
   ] = useState(false);
+  const [showRelayPermissionForm, setShowRelayPermissionForm] = useState(false);
   const [selectedVaultFromProposal, setSelectedVaultFromProposal] = useState<
     VaultFromProposal | undefined
   >();
@@ -80,9 +83,32 @@ const VaultList: React.FC<VaultListProps> = ({ address }) => {
     "your"
   );
 
+  const vaults: VaultCreated[] = userData?.userDatas[0]?.vaultsCreated || [];
+  const grantedVaults: VaultGranted[] =
+    userData?.userDatas[0]?.vaultAccessesGranted.map((vault) => ({
+      ...vault.accessRegistry.vaultCreated,
+      permission: vault.permission,
+    })) || [];
+
+  const vaultsFromProposal: VaultFromProposal[] =
+    userData?.userDatas[0]?.vaultsFromProposalPinned.map((vault) => ({
+      ...vault.vaultFromProposal,
+      permission: vault.permission,
+    })) || [];
+
+  const pendingUpgrade = useVFPPendingUpgrade(
+    address!,
+    vaultsFromProposal.map((v) => v.proposalId)
+  );
+
   const handlePermissionClick = (vault: VaultFromProposal) => {
     setSelectedVaultFromProposal(vault);
     setShowUpgradeVaultFromProposalForm(true);
+  };
+
+  const handlePendingRelayClick = (vault: VaultFromProposal) => {
+    setSelectedVaultFromProposal(vault);
+    setShowRelayPermissionForm(true);
   };
 
   const handleVaultClick = (vaultId: string) => {
@@ -107,19 +133,6 @@ const VaultList: React.FC<VaultListProps> = ({ address }) => {
   if (userDataLoading) {
     return <LoadingComponent text="Loading vaults..." />;
   }
-
-  const vaults: VaultCreated[] = userData?.userDatas[0]?.vaultsCreated || [];
-  const grantedVaults: VaultGranted[] =
-    userData?.userDatas[0]?.vaultAccessesGranted.map((vault) => ({
-      ...vault.accessRegistry.vaultCreated,
-      permission: vault.permission,
-    })) || [];
-
-  const vaultsFromProposal: VaultFromProposal[] =
-    userData?.userDatas[0]?.vaultsFromProposalPinned.map((vault) => ({
-      ...vault.vaultFromProposal,
-      permission: vault.permission,
-    })) || [];
 
   return (
     <div className="space-y-6">
@@ -149,6 +162,24 @@ const VaultList: React.FC<VaultListProps> = ({ address }) => {
         <UpgradeVaultFromProposalForm
           vault={selectedVaultFromProposal!}
           onClose={() => setShowUpgradeVaultFromProposalForm(false)}
+          onSuccess={() => {
+            // Refresh the vault list after successful creation
+            queryClient.invalidateQueries({
+              queryKey: ["userData", address || connectedAddress || ""],
+            });
+          }}
+        />
+      )}
+      {showRelayPermissionForm && (
+        <RelayPermissionForm
+          vault={selectedVaultFromProposal!}
+          txHash={
+            pendingUpgrade?.find(
+              (upgrade) =>
+                upgrade.proposalId === selectedVaultFromProposal?.proposalId
+            )?.transactionHash || null
+          }
+          onClose={() => setShowRelayPermissionForm(false)}
           onSuccess={() => {
             // Refresh the vault list after successful creation
             queryClient.invalidateQueries({
@@ -298,6 +329,12 @@ const VaultList: React.FC<VaultListProps> = ({ address }) => {
                   onVaultClick={handleVaultClick}
                   onVaultSelect={handleVaultSelect}
                   onPermissionClick={() => handlePermissionClick(vault)}
+                  onPendingRelayClick={() => handlePendingRelayClick(vault)}
+                  pendingRelay={
+                    pendingUpgrade?.find(
+                      (upgrade) => upgrade.proposalId === vault.proposalId
+                    )?.transactionHash !== null
+                  }
                 />
               ))}
             </div>

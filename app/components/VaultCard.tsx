@@ -2,6 +2,7 @@
 
 import {
   ArrowRightIcon,
+  ClockIcon,
   EyeIcon,
   FolderIcon,
   LockClosedIcon,
@@ -23,6 +24,8 @@ interface VaultCardProps {
   onVaultClick: (vaultId: string) => void;
   onVaultSelect: (vaultId: string) => void;
   onPermissionClick?: (vaultId: string) => void;
+  onPendingRelayClick?: (vaultId: string) => void;
+  pendingRelay?: boolean;
 }
 
 const VaultCard: React.FC<VaultCardProps> = ({
@@ -32,6 +35,8 @@ const VaultCard: React.FC<VaultCardProps> = ({
   onVaultClick,
   onVaultSelect,
   onPermissionClick,
+  onPendingRelayClick,
+  pendingRelay,
 }) => {
   const hasPermission =
     (isGrantedAccess || isVaultFromProposal) && "permission" in vault;
@@ -40,6 +45,7 @@ const VaultCard: React.FC<VaultCardProps> = ({
     vault.description.length > maxLength
       ? vault.description.substring(0, maxLength) + " (...)"
       : vault.description;
+
   return (
     <div
       onClick={() => onVaultClick(vault.tokenId)}
@@ -84,21 +90,40 @@ const VaultCard: React.FC<VaultCardProps> = ({
         <span className="flex items-center">
           {hasPermission ? (
             vault.permission.permission === Permissions.VIEWER ? (
-              <div
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onPermissionClick?.(vault.tokenId);
-                }}
-                className="relative group flex items-center cursor-pointer"
-              >
-                <EyeIcon className="h-4 w-4 mr-1 text-green-500" />
-                Viewer
-                {isVaultFromProposal && (
-                  <div className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-600 text-white text-sm px-2 py-1 rounded shadow-lg whitespace-nowrap transition-opacity duration-200 opacity-0 group-hover:opacity-100">
-                    Upgrade to Contributor
-                  </div>
-                )}
-              </div>
+              pendingRelay ? (
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onPendingRelayClick?.(vault.tokenId);
+                  }}
+                  className="relative group flex items-center cursor-pointer"
+                >
+                  <ClockIcon className="h-4 w-4 mr-1 text-red-500" />
+                  Pending Upgrade
+                  {isVaultFromProposal && (
+                    <div className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-600 text-white text-sm px-2 py-1 rounded shadow-lg whitespace-nowrap transition-opacity duration-200 opacity-0 group-hover:opacity-100">
+                      Upgrade to contributor in crosschain pending relay. Click
+                      to upgrade!
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onPermissionClick?.(vault.tokenId);
+                  }}
+                  className="relative group flex items-center cursor-pointer"
+                >
+                  <EyeIcon className="h-4 w-4 mr-1 text-green-500" />
+                  Viewer
+                  {isVaultFromProposal && (
+                    <div className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-600 text-white text-sm px-2 py-1 rounded shadow-lg whitespace-nowrap transition-opacity duration-200 opacity-0 group-hover:opacity-100">
+                      Click to upgrade to Contributor!
+                    </div>
+                  )}
+                </div>
+              )
             ) : (
               <>
                 <PencilIcon className="h-4 w-4 mr-1 text-blue-500" />

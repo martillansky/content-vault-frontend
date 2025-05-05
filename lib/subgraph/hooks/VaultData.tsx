@@ -22,6 +22,13 @@ const GET_VAULT_DATA = gql`
         }
       }
     }
+    vaultFromProposalCreateds(where: { tokenId: $tokenId }) {
+      tokenId
+      proposalId
+      name
+      description
+      blockTimestamp
+    }
   }
 `;
 
@@ -29,7 +36,7 @@ export function useVaultData(tokenId: string) {
   return useQuery<VaultDataResponse>({
     queryKey: ["vaultData", tokenId],
     queryFn: async () => {
-      if (!tokenId) return { vaultCreateds: [] };
+      if (!tokenId) return { vaultCreateds: [], vaultFromProposalCreateds: [] };
       return requestClientSepolia<VaultDataResponse>(GET_VAULT_DATA, {
         tokenId: tokenId,
       });

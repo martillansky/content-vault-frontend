@@ -4,17 +4,17 @@ import {
   ShieldCheckIcon,
   UserMinusIcon,
 } from "@heroicons/react/24/outline";
-//import { useState } from "react";
+
+export type RoleTypes = "owner" | "contributor" | "viewer";
 
 interface WalletAccess {
   address: string;
-  role: "owner" | "contributor" | "viewer";
+  role: RoleTypes;
   grantedAt: string;
 }
 
 interface WalletAccessTableProps {
   walletAccess: WalletAccess[];
-  currentOwner: string;
   isOwner: boolean;
   onUpgradeAccess: (walletAddress: string) => void;
   onRevokeAccess: (walletAddress: string) => void;
@@ -23,7 +23,6 @@ interface WalletAccessTableProps {
 
 export default function WalletAccessTable({
   walletAccess,
-  //currentOwner,
   isOwner,
   onUpgradeAccess,
   onRevokeAccess,

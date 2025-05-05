@@ -17,6 +17,15 @@ export interface VaultData extends VaultCreated {
   accessRegistries: AccessRegistry[];
 }
 
+export interface VaultFromProposalCreated {
+  tokenId: string;
+  proposalId: string;
+  name: string;
+  description: string;
+  blockTimestamp: string;
+}
+
 export interface VaultDataResponse {
   vaultCreateds: VaultData[];
+  vaultFromProposalCreateds: VaultFromProposalCreated[];
 }

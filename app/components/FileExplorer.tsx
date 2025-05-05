@@ -54,25 +54,27 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
   const [selectedFile, setSelectedFile] = useState<FileNode | null>(null);
   const [showUploadForm, setShowUploadForm] = useState(false);
   const [showVaultSettings, setShowVaultSettings] = useState(false);
-  const [vaultOwner, setVaultOwner] = useState<string>("");
 
   useEffect(() => {
     setVaultId(vaultId);
   }, [vaultId, setVaultId]);
-
-  useEffect(() => {
-    setVaultOwner(
-      vault?.owner ||
-        process.env.NEXT_PUBLIC_MASTER_CROSSCHAIN_GRANTER_ADDRESS_SEPOLIA ||
-        ""
-    );
-  }, [vault]);
 
   const content = useMemo(
     () => contentResponse?.contentStoredWithMetadata_collection || [],
     [contentResponse]
   );
   const vaultData = useMemo(() => contentFormatter(content), [content]);
+
+  const formattedVaultName = useMemo(() => {
+    const maxLength = 40;
+    if (vault?.name) {
+      if (vault.name.length > maxLength) {
+        return vault.name.substring(0, maxLength) + "...";
+      }
+      return vault.name;
+    }
+    return "Vault " + vaultId + " (ERC-1155)";
+  }, [vault, vaultId]);
 
   const toggleFolder = (folderId: string) => {
     setExpandedFolders((prev) => {
@@ -102,7 +104,7 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
         if (!fileContent.isCIDEncrypted) {
           decryptedFile = simpleCIDFromHex(encryptedCID);
         } else {
-          const password = await retrieveEncryptionPassword(vaultOwner);
+          const password = await retrieveEncryptionPassword(vault!.owner);
           decryptedFile = await decryptCIDFromHex(encryptedCID, password);
         }
 
@@ -194,7 +196,7 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
       {showUploadForm && (
         <ContentUploadForm
           vaultId={vaultId}
-          vaultOwner={vaultOwner}
+          vaultOwner={vault!.owner}
           onClose={() => setShowUploadForm(false)}
           onSuccess={() => {
             // Refresh the contents
@@ -212,9 +214,10 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
       <div className="flex justify-between items-center">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            {vault?.name}
+            {formattedVaultName}
           </h1>
         </div>
+
         <div className="flex space-x-2">
           <button
             onClick={handleVaultSettingsClick}
@@ -223,6 +226,7 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
             <Cog6ToothIcon className="h-4 w-4 mr-1" />
             Vault Settings
           </button>
+
           <button
             className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center space-x-2 shadow-sm hover:shadow-md"
             onClick={() => setShowUploadForm(true)}

@@ -1,6 +1,8 @@
 "use client";
 
 import { useVaultData } from "@/lib/subgraph/hooks/VaultData";
+import { AccessRegistry } from "@/lib/subgraph/types/VaultData.types";
+import { useAppKitAccount } from "@reown/appkit/react";
 import {
   createContext,
   ReactNode,
@@ -8,12 +10,14 @@ import {
   useEffect,
   useState,
 } from "react";
+
 interface Vault {
   id: string;
   name: string;
   description: string;
   createdAt: string;
   owner: string;
+  accessRegistries: AccessRegistry[];
 }
 
 interface VaultContextType {
@@ -30,26 +34,58 @@ interface VaultProviderProps {
 }
 
 export function VaultProvider({ children }: VaultProviderProps) {
+  const { address } = useAppKitAccount();
   const [vaultId, setVaultId] = useState<string | null>(null);
   const [vault, setVault] = useState<Vault | null>(null);
   const { data: vaultData, isLoading: isLoadingContent } = useVaultData(
     vaultId || ""
   );
 
+  // Reset vault state when wallet changes
   useEffect(() => {
-    if (vaultData?.vaultCreateds && vaultData?.vaultCreateds?.length > 0) {
-      const content = vaultData?.vaultCreateds[0];
-      const vaultObject: Vault = {
-        id: vaultId || "",
-        name: content.name || "Untitled Vault",
-        description: content.description || "",
-        createdAt: content.blockTimestamp || "",
-        owner: content.owner || "",
-      };
+    setVaultId(null);
+    setVault(null);
+  }, [address]);
 
-      setVault(vaultObject);
+  // Update vault when vaultId changes
+  useEffect(() => {
+    if (!vaultId) {
+      setVault(null);
+      return;
     }
+  }, [vaultId]);
+
+  // Update vault when vaultData changes
+  useEffect(() => {
+    if (
+      (!vaultData?.vaultCreateds || vaultData?.vaultCreateds?.length === 0) &&
+      (!vaultData?.vaultFromProposalCreateds ||
+        vaultData?.vaultFromProposalCreateds?.length === 0)
+    ) {
+      setVault(null);
+      return;
+    }
+
+    const content =
+      vaultData.vaultCreateds[0] || vaultData.vaultFromProposalCreateds[0];
+    const vaultObject: Vault = {
+      id: vaultId || "",
+      name: content.name,
+      description: content.description,
+      createdAt: content.blockTimestamp,
+      owner:
+        content.owner ||
+        process.env.NEXT_PUBLIC_MASTER_CROSSCHAIN_GRANTER_ADDRESS_SEPOLIA ||
+        "",
+      accessRegistries: content.accessRegistries || [],
+    };
+
+    setVault(vaultObject);
   }, [vaultData, vaultId]);
+
+  const handleSetVaultId = (id: string) => {
+    setVaultId(id);
+  };
 
   return (
     <VaultContext.Provider
@@ -57,7 +93,7 @@ export function VaultProvider({ children }: VaultProviderProps) {
         vault,
         isLoading: isLoadingContent,
         error: null,
-        setVaultId,
+        setVaultId: handleSetVaultId,
       }}
     >
       {children}

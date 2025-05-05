@@ -331,9 +331,11 @@ const VaultList: React.FC<VaultListProps> = ({ address }) => {
                   onPermissionClick={() => handlePermissionClick(vault)}
                   onPendingRelayClick={() => handlePendingRelayClick(vault)}
                   pendingRelay={
-                    pendingUpgrade?.find(
-                      (upgrade) => upgrade.proposalId === vault.proposalId
-                    )?.transactionHash !== null
+                    pendingUpgrade
+                      ? pendingUpgrade.find(
+                          (upgrade) => upgrade.proposalId === vault.proposalId
+                        )?.transactionHash !== null
+                      : false
                   }
                 />
               ))}

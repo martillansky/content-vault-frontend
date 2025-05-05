@@ -54,10 +54,19 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
   const [selectedFile, setSelectedFile] = useState<FileNode | null>(null);
   const [showUploadForm, setShowUploadForm] = useState(false);
   const [showVaultSettings, setShowVaultSettings] = useState(false);
+  const [vaultOwner, setVaultOwner] = useState<string>("");
 
   useEffect(() => {
     setVaultId(vaultId);
   }, [vaultId, setVaultId]);
+
+  useEffect(() => {
+    setVaultOwner(
+      vault?.owner ||
+        process.env.NEXT_PUBLIC_MASTER_CROSSCHAIN_GRANTER_ADDRESS_SEPOLIA ||
+        ""
+    );
+  }, [vault]);
 
   const content = useMemo(
     () => contentResponse?.contentStoredWithMetadata_collection || [],
@@ -93,7 +102,7 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
         if (!fileContent.isCIDEncrypted) {
           decryptedFile = simpleCIDFromHex(encryptedCID);
         } else {
-          const password = await retrieveEncryptionPassword(vault!.owner);
+          const password = await retrieveEncryptionPassword(vaultOwner);
           decryptedFile = await decryptCIDFromHex(encryptedCID, password);
         }
 
@@ -185,6 +194,7 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
       {showUploadForm && (
         <ContentUploadForm
           vaultId={vaultId}
+          vaultOwner={vaultOwner}
           onClose={() => setShowUploadForm(false)}
           onSuccess={() => {
             // Refresh the contents

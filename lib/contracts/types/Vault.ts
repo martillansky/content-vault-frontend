@@ -28,33 +28,41 @@ import type {
 
 export interface VaultInterface extends utils.Interface {
   functions: {
-    "PERMISSION_NONE()": FunctionFragment;
-    "PERMISSION_READ()": FunctionFragment;
-    "PERMISSION_WRITE()": FunctionFragment;
+    "assignVaultFromProposalOwnership(uint256,address)": FunctionFragment;
     "balanceOf(address,uint256)": FunctionFragment;
     "balanceOfBatch(address[],uint256[])": FunctionFragment;
+    "burnVaultAccess(address,uint256)": FunctionFragment;
     "createVault(string,string)": FunctionFragment;
-    "eip712Domain()": FunctionFragment;
-    "getCurrentSchema()": FunctionFragment;
+    "getDomainSeparator()": FunctionFragment;
+    "getLastTokenId()": FunctionFragment;
     "getNonce(address)": FunctionFragment;
-    "getPermission(uint256,address)": FunctionFragment;
-    "getSchema(uint256)": FunctionFragment;
-    "getVaultOwner(uint256)": FunctionFragment;
-    "getVaultSchemaIndex(uint256)": FunctionFragment;
+    "getPermissionNone()": FunctionFragment;
+    "getPermissionRead()": FunctionFragment;
+    "getPermissionWrite()": FunctionFragment;
+    "getVaultBalance(address,uint256)": FunctionFragment;
     "grantAccess(address,uint256,uint8)": FunctionFragment;
     "grantAccessWithSignature(address,uint256,uint8,uint256,bytes)": FunctionFragment;
+    "hasGrantedPermission(uint256,address)": FunctionFragment;
+    "incrementLastTokenId()": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
-    "lastSchemaIndex()": FunctionFragment;
+    "isPermissionVaultRead(uint256,address)": FunctionFragment;
+    "isPermissionVaultWrite(uint256,address)": FunctionFragment;
+    "lastTokenId()": FunctionFragment;
+    "mintVaultAccess(address,uint256)": FunctionFragment;
     "nonces(address)": FunctionFragment;
     "owner()": FunctionFragment;
     "permissions(uint256,address)": FunctionFragment;
+    "proposalVaultManager()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "revokeAccess(uint256,address)": FunctionFragment;
     "safeBatchTransferFrom(address,address,uint256[],uint256[],bytes)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,uint256,bytes)": FunctionFragment;
-    "schemaCIDs(uint256)": FunctionFragment;
+    "schemaManager()": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
-    "setSchema(string)": FunctionFragment;
+    "setPermissionNone(uint256,address)": FunctionFragment;
+    "setPermissionRead(uint256,address)": FunctionFragment;
+    "setPermissionWrite(uint256,address)": FunctionFragment;
+    "setProposalVaultManager(address)": FunctionFragment;
     "setURI(string)": FunctionFragment;
     "storeContentBatch(uint256,bytes[],bool,string[])": FunctionFragment;
     "storeContentBatchWithSignature(uint256,bytes[],bool,string[],uint256,bytes)": FunctionFragment;
@@ -63,41 +71,48 @@ export interface VaultInterface extends utils.Interface {
     "supportsInterface(bytes4)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "transferVaultOwnership(uint256,address)": FunctionFragment;
-    "upgradePermission(uint256,address,uint8)": FunctionFragment;
+    "upgradePermission(uint256,address)": FunctionFragment;
     "uri(uint256)": FunctionFragment;
-    "vaultExists(uint256)": FunctionFragment;
-    "vaults(uint256)": FunctionFragment;
+    "vaultOwner(uint256)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "PERMISSION_NONE"
-      | "PERMISSION_READ"
-      | "PERMISSION_WRITE"
+      | "assignVaultFromProposalOwnership"
       | "balanceOf"
       | "balanceOfBatch"
+      | "burnVaultAccess"
       | "createVault"
-      | "eip712Domain"
-      | "getCurrentSchema"
+      | "getDomainSeparator"
+      | "getLastTokenId"
       | "getNonce"
-      | "getPermission"
-      | "getSchema"
-      | "getVaultOwner"
-      | "getVaultSchemaIndex"
+      | "getPermissionNone"
+      | "getPermissionRead"
+      | "getPermissionWrite"
+      | "getVaultBalance"
       | "grantAccess"
       | "grantAccessWithSignature"
+      | "hasGrantedPermission"
+      | "incrementLastTokenId"
       | "isApprovedForAll"
-      | "lastSchemaIndex"
+      | "isPermissionVaultRead"
+      | "isPermissionVaultWrite"
+      | "lastTokenId"
+      | "mintVaultAccess"
       | "nonces"
       | "owner"
       | "permissions"
+      | "proposalVaultManager"
       | "renounceOwnership"
       | "revokeAccess"
       | "safeBatchTransferFrom"
       | "safeTransferFrom"
-      | "schemaCIDs"
+      | "schemaManager"
       | "setApprovalForAll"
-      | "setSchema"
+      | "setPermissionNone"
+      | "setPermissionRead"
+      | "setPermissionWrite"
+      | "setProposalVaultManager"
       | "setURI"
       | "storeContentBatch"
       | "storeContentBatchWithSignature"
@@ -108,21 +123,12 @@ export interface VaultInterface extends utils.Interface {
       | "transferVaultOwnership"
       | "upgradePermission"
       | "uri"
-      | "vaultExists"
-      | "vaults"
+      | "vaultOwner"
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "PERMISSION_NONE",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "PERMISSION_READ",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "PERMISSION_WRITE",
-    values?: undefined
+    functionFragment: "assignVaultFromProposalOwnership",
+    values: [BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: "balanceOf",
@@ -133,33 +139,37 @@ export interface VaultInterface extends utils.Interface {
     values: [string[], BigNumberish[]]
   ): string;
   encodeFunctionData(
+    functionFragment: "burnVaultAccess",
+    values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "createVault",
     values: [string, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "eip712Domain",
+    functionFragment: "getDomainSeparator",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getCurrentSchema",
+    functionFragment: "getLastTokenId",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "getNonce", values: [string]): string;
   encodeFunctionData(
-    functionFragment: "getPermission",
-    values: [BigNumberish, string]
+    functionFragment: "getPermissionNone",
+    values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getSchema",
-    values: [BigNumberish]
+    functionFragment: "getPermissionRead",
+    values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getVaultOwner",
-    values: [BigNumberish]
+    functionFragment: "getPermissionWrite",
+    values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getVaultSchemaIndex",
-    values: [BigNumberish]
+    functionFragment: "getVaultBalance",
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "grantAccess",
@@ -170,18 +180,42 @@ export interface VaultInterface extends utils.Interface {
     values: [string, BigNumberish, BigNumberish, BigNumberish, BytesLike]
   ): string;
   encodeFunctionData(
+    functionFragment: "hasGrantedPermission",
+    values: [BigNumberish, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "incrementLastTokenId",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "isApprovedForAll",
     values: [string, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "lastSchemaIndex",
+    functionFragment: "isPermissionVaultRead",
+    values: [BigNumberish, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "isPermissionVaultWrite",
+    values: [BigNumberish, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "lastTokenId",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "mintVaultAccess",
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "nonces", values: [string]): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "permissions",
     values: [BigNumberish, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "proposalVaultManager",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
@@ -200,14 +234,29 @@ export interface VaultInterface extends utils.Interface {
     values: [string, string, BigNumberish, BigNumberish, BytesLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "schemaCIDs",
-    values: [BigNumberish]
+    functionFragment: "schemaManager",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "setApprovalForAll",
     values: [string, boolean]
   ): string;
-  encodeFunctionData(functionFragment: "setSchema", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "setPermissionNone",
+    values: [BigNumberish, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setPermissionRead",
+    values: [BigNumberish, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setPermissionWrite",
+    values: [BigNumberish, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setProposalVaultManager",
+    values: [string]
+  ): string;
   encodeFunctionData(functionFragment: "setURI", values: [string]): string;
   encodeFunctionData(
     functionFragment: "storeContentBatch",
@@ -246,28 +295,16 @@ export interface VaultInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "upgradePermission",
-    values: [BigNumberish, string, BigNumberish]
+    values: [BigNumberish, string]
   ): string;
   encodeFunctionData(functionFragment: "uri", values: [BigNumberish]): string;
   encodeFunctionData(
-    functionFragment: "vaultExists",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "vaults",
+    functionFragment: "vaultOwner",
     values: [BigNumberish]
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "PERMISSION_NONE",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "PERMISSION_READ",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "PERMISSION_WRITE",
+    functionFragment: "assignVaultFromProposalOwnership",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
@@ -276,29 +313,36 @@ export interface VaultInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "burnVaultAccess",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "createVault",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "eip712Domain",
+    functionFragment: "getDomainSeparator",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getCurrentSchema",
+    functionFragment: "getLastTokenId",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getNonce", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "getPermission",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "getSchema", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "getVaultOwner",
+    functionFragment: "getPermissionNone",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getVaultSchemaIndex",
+    functionFragment: "getPermissionRead",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getPermissionWrite",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getVaultBalance",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -310,17 +354,41 @@ export interface VaultInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "hasGrantedPermission",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "incrementLastTokenId",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "isApprovedForAll",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "lastSchemaIndex",
+    functionFragment: "isPermissionVaultRead",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "isPermissionVaultWrite",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "lastTokenId",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "mintVaultAccess",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "nonces", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "permissions",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "proposalVaultManager",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -339,12 +407,30 @@ export interface VaultInterface extends utils.Interface {
     functionFragment: "safeTransferFrom",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "schemaCIDs", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "schemaManager",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "setApprovalForAll",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "setSchema", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "setPermissionNone",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setPermissionRead",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setPermissionWrite",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setProposalVaultManager",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "setURI", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "storeContentBatch",
@@ -379,19 +465,13 @@ export interface VaultInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "uri", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "vaultExists",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "vaults", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "vaultOwner", data: BytesLike): Result;
 
   events: {
     "ApprovalForAll(address,address,bool)": EventFragment;
     "ContentStoredWithMetadata(address,uint256,bytes,bool,string,bool)": EventFragment;
-    "EIP712DomainChanged()": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
-    "PermissionUpgraded(address,uint256,uint8)": EventFragment;
-    "SchemaSet(uint256,string)": EventFragment;
+    "PermissionUpgraded(address,uint256)": EventFragment;
     "TransferBatch(address,address,address,uint256[],uint256[])": EventFragment;
     "TransferSingle(address,address,address,uint256,uint256)": EventFragment;
     "URI(string,uint256)": EventFragment;
@@ -403,10 +483,8 @@ export interface VaultInterface extends utils.Interface {
 
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ContentStoredWithMetadata"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "EIP712DomainChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PermissionUpgraded"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "SchemaSet"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TransferBatch"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TransferSingle"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "URI"): EventFragment;
@@ -444,15 +522,6 @@ export type ContentStoredWithMetadataEvent = TypedEvent<
 export type ContentStoredWithMetadataEventFilter =
   TypedEventFilter<ContentStoredWithMetadataEvent>;
 
-export interface EIP712DomainChangedEventObject {}
-export type EIP712DomainChangedEvent = TypedEvent<
-  [],
-  EIP712DomainChangedEventObject
->;
-
-export type EIP712DomainChangedEventFilter =
-  TypedEventFilter<EIP712DomainChangedEvent>;
-
 export interface OwnershipTransferredEventObject {
   previousOwner: string;
   newOwner: string;
@@ -468,26 +537,14 @@ export type OwnershipTransferredEventFilter =
 export interface PermissionUpgradedEventObject {
   user: string;
   tokenId: BigNumber;
-  newPermission: number;
 }
 export type PermissionUpgradedEvent = TypedEvent<
-  [string, BigNumber, number],
+  [string, BigNumber],
   PermissionUpgradedEventObject
 >;
 
 export type PermissionUpgradedEventFilter =
   TypedEventFilter<PermissionUpgradedEvent>;
-
-export interface SchemaSetEventObject {
-  index: BigNumber;
-  schemaCID: string;
-}
-export type SchemaSetEvent = TypedEvent<
-  [BigNumber, string],
-  SchemaSetEventObject
->;
-
-export type SchemaSetEventFilter = TypedEventFilter<SchemaSetEvent>;
 
 export interface TransferBatchEventObject {
   operator: string;
@@ -604,11 +661,11 @@ export interface Vault extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    PERMISSION_NONE(overrides?: CallOverrides): Promise<[number]>;
-
-    PERMISSION_READ(overrides?: CallOverrides): Promise<[number]>;
-
-    PERMISSION_WRITE(overrides?: CallOverrides): Promise<[number]>;
+    assignVaultFromProposalOwnership(
+      tokenId: BigNumberish,
+      masterCrosschainGranter: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
 
     balanceOf(
       account: string,
@@ -622,47 +679,32 @@ export interface Vault extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber[]]>;
 
+    burnVaultAccess(
+      from: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
     createVault(
       name: string,
       description: string,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
-    eip712Domain(
-      overrides?: CallOverrides
-    ): Promise<
-      [string, string, string, BigNumber, string, string, BigNumber[]] & {
-        fields: string;
-        name: string;
-        version: string;
-        chainId: BigNumber;
-        verifyingContract: string;
-        salt: string;
-        extensions: BigNumber[];
-      }
-    >;
+    getDomainSeparator(overrides?: CallOverrides): Promise<[string]>;
 
-    getCurrentSchema(overrides?: CallOverrides): Promise<[string]>;
+    getLastTokenId(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    getNonce(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+    getNonce(signer: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    getPermission(
-      tokenId: BigNumberish,
+    getPermissionNone(overrides?: CallOverrides): Promise<[number]>;
+
+    getPermissionRead(overrides?: CallOverrides): Promise<[number]>;
+
+    getPermissionWrite(overrides?: CallOverrides): Promise<[number]>;
+
+    getVaultBalance(
       user: string,
-      overrides?: CallOverrides
-    ): Promise<[number]>;
-
-    getSchema(
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
-    getVaultOwner(
-      tokenId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
-    getVaultSchemaIndex(
       tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
@@ -683,13 +725,41 @@ export interface Vault extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
+    hasGrantedPermission(
+      tokenId: BigNumberish,
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    incrementLastTokenId(
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
     isApprovedForAll(
       account: string,
       operator: string,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    lastSchemaIndex(overrides?: CallOverrides): Promise<[BigNumber]>;
+    isPermissionVaultRead(
+      tokenId: BigNumberish,
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    isPermissionVaultWrite(
+      tokenId: BigNumberish,
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    lastTokenId(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    mintVaultAccess(
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
 
     nonces(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -700,6 +770,8 @@ export interface Vault extends BaseContract {
       arg1: string,
       overrides?: CallOverrides
     ): Promise<[number]>;
+
+    proposalVaultManager(overrides?: CallOverrides): Promise<[string]>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string }
@@ -729,10 +801,7 @@ export interface Vault extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
-    schemaCIDs(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
+    schemaManager(overrides?: CallOverrides): Promise<[string]>;
 
     setApprovalForAll(
       operator: string,
@@ -740,8 +809,26 @@ export interface Vault extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
-    setSchema(
-      schemaCID: string,
+    setPermissionNone(
+      tokenId: BigNumberish,
+      user: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    setPermissionRead(
+      tokenId: BigNumberish,
+      user: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    setPermissionWrite(
+      tokenId: BigNumberish,
+      user: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    setProposalVaultManager(
+      _manager: string,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
@@ -805,30 +892,22 @@ export interface Vault extends BaseContract {
     upgradePermission(
       tokenId: BigNumberish,
       user: string,
-      newPermission: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     uri(arg0: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
 
-    vaultExists(
-      tokenId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
-    vaults(
+    vaultOwner(
       arg0: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<
-      [string, BigNumber] & { owner: string; currentSchemaIndex: BigNumber }
-    >;
+    ): Promise<[string]>;
   };
 
-  PERMISSION_NONE(overrides?: CallOverrides): Promise<number>;
-
-  PERMISSION_READ(overrides?: CallOverrides): Promise<number>;
-
-  PERMISSION_WRITE(overrides?: CallOverrides): Promise<number>;
+  assignVaultFromProposalOwnership(
+    tokenId: BigNumberish,
+    masterCrosschainGranter: string,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
 
   balanceOf(
     account: string,
@@ -842,44 +921,32 @@ export interface Vault extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber[]>;
 
+  burnVaultAccess(
+    from: string,
+    tokenId: BigNumberish,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
   createVault(
     name: string,
     description: string,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  eip712Domain(
-    overrides?: CallOverrides
-  ): Promise<
-    [string, string, string, BigNumber, string, string, BigNumber[]] & {
-      fields: string;
-      name: string;
-      version: string;
-      chainId: BigNumber;
-      verifyingContract: string;
-      salt: string;
-      extensions: BigNumber[];
-    }
-  >;
+  getDomainSeparator(overrides?: CallOverrides): Promise<string>;
 
-  getCurrentSchema(overrides?: CallOverrides): Promise<string>;
+  getLastTokenId(overrides?: CallOverrides): Promise<BigNumber>;
 
-  getNonce(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+  getNonce(signer: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-  getPermission(
-    tokenId: BigNumberish,
+  getPermissionNone(overrides?: CallOverrides): Promise<number>;
+
+  getPermissionRead(overrides?: CallOverrides): Promise<number>;
+
+  getPermissionWrite(overrides?: CallOverrides): Promise<number>;
+
+  getVaultBalance(
     user: string,
-    overrides?: CallOverrides
-  ): Promise<number>;
-
-  getSchema(index: BigNumberish, overrides?: CallOverrides): Promise<string>;
-
-  getVaultOwner(
-    tokenId: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  getVaultSchemaIndex(
     tokenId: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
@@ -900,13 +967,41 @@ export interface Vault extends BaseContract {
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
+  hasGrantedPermission(
+    tokenId: BigNumberish,
+    user: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  incrementLastTokenId(
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
   isApprovedForAll(
     account: string,
     operator: string,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  lastSchemaIndex(overrides?: CallOverrides): Promise<BigNumber>;
+  isPermissionVaultRead(
+    tokenId: BigNumberish,
+    user: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  isPermissionVaultWrite(
+    tokenId: BigNumberish,
+    user: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  lastTokenId(overrides?: CallOverrides): Promise<BigNumber>;
+
+  mintVaultAccess(
+    to: string,
+    tokenId: BigNumberish,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
 
   nonces(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -917,6 +1012,8 @@ export interface Vault extends BaseContract {
     arg1: string,
     overrides?: CallOverrides
   ): Promise<number>;
+
+  proposalVaultManager(overrides?: CallOverrides): Promise<string>;
 
   renounceOwnership(
     overrides?: Overrides & { from?: string }
@@ -946,7 +1043,7 @@ export interface Vault extends BaseContract {
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  schemaCIDs(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
+  schemaManager(overrides?: CallOverrides): Promise<string>;
 
   setApprovalForAll(
     operator: string,
@@ -954,8 +1051,26 @@ export interface Vault extends BaseContract {
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  setSchema(
-    schemaCID: string,
+  setPermissionNone(
+    tokenId: BigNumberish,
+    user: string,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  setPermissionRead(
+    tokenId: BigNumberish,
+    user: string,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  setPermissionWrite(
+    tokenId: BigNumberish,
+    user: string,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  setProposalVaultManager(
+    _manager: string,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -1019,30 +1134,19 @@ export interface Vault extends BaseContract {
   upgradePermission(
     tokenId: BigNumberish,
     user: string,
-    newPermission: BigNumberish,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   uri(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
-  vaultExists(
-    tokenId: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
-  vaults(
-    arg0: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<
-    [string, BigNumber] & { owner: string; currentSchemaIndex: BigNumber }
-  >;
+  vaultOwner(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
-    PERMISSION_NONE(overrides?: CallOverrides): Promise<number>;
-
-    PERMISSION_READ(overrides?: CallOverrides): Promise<number>;
-
-    PERMISSION_WRITE(overrides?: CallOverrides): Promise<number>;
+    assignVaultFromProposalOwnership(
+      tokenId: BigNumberish,
+      masterCrosschainGranter: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     balanceOf(
       account: string,
@@ -1056,44 +1160,32 @@ export interface Vault extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber[]>;
 
+    burnVaultAccess(
+      from: string,
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     createVault(
       name: string,
       description: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    eip712Domain(
-      overrides?: CallOverrides
-    ): Promise<
-      [string, string, string, BigNumber, string, string, BigNumber[]] & {
-        fields: string;
-        name: string;
-        version: string;
-        chainId: BigNumber;
-        verifyingContract: string;
-        salt: string;
-        extensions: BigNumber[];
-      }
-    >;
+    getDomainSeparator(overrides?: CallOverrides): Promise<string>;
 
-    getCurrentSchema(overrides?: CallOverrides): Promise<string>;
+    getLastTokenId(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getNonce(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+    getNonce(signer: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    getPermission(
-      tokenId: BigNumberish,
+    getPermissionNone(overrides?: CallOverrides): Promise<number>;
+
+    getPermissionRead(overrides?: CallOverrides): Promise<number>;
+
+    getPermissionWrite(overrides?: CallOverrides): Promise<number>;
+
+    getVaultBalance(
       user: string,
-      overrides?: CallOverrides
-    ): Promise<number>;
-
-    getSchema(index: BigNumberish, overrides?: CallOverrides): Promise<string>;
-
-    getVaultOwner(
-      tokenId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    getVaultSchemaIndex(
       tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -1114,13 +1206,39 @@ export interface Vault extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    hasGrantedPermission(
+      tokenId: BigNumberish,
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    incrementLastTokenId(overrides?: CallOverrides): Promise<BigNumber>;
+
     isApprovedForAll(
       account: string,
       operator: string,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    lastSchemaIndex(overrides?: CallOverrides): Promise<BigNumber>;
+    isPermissionVaultRead(
+      tokenId: BigNumberish,
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    isPermissionVaultWrite(
+      tokenId: BigNumberish,
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    lastTokenId(overrides?: CallOverrides): Promise<BigNumber>;
+
+    mintVaultAccess(
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     nonces(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1131,6 +1249,8 @@ export interface Vault extends BaseContract {
       arg1: string,
       overrides?: CallOverrides
     ): Promise<number>;
+
+    proposalVaultManager(overrides?: CallOverrides): Promise<string>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
@@ -1158,7 +1278,7 @@ export interface Vault extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    schemaCIDs(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
+    schemaManager(overrides?: CallOverrides): Promise<string>;
 
     setApprovalForAll(
       operator: string,
@@ -1166,7 +1286,28 @@ export interface Vault extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setSchema(schemaCID: string, overrides?: CallOverrides): Promise<void>;
+    setPermissionNone(
+      tokenId: BigNumberish,
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setPermissionRead(
+      tokenId: BigNumberish,
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setPermissionWrite(
+      tokenId: BigNumberish,
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setProposalVaultManager(
+      _manager: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     setURI(newuri: string, overrides?: CallOverrides): Promise<void>;
 
@@ -1225,23 +1366,12 @@ export interface Vault extends BaseContract {
     upgradePermission(
       tokenId: BigNumberish,
       user: string,
-      newPermission: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     uri(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
-    vaultExists(
-      tokenId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    vaults(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [string, BigNumber] & { owner: string; currentSchemaIndex: BigNumber }
-    >;
+    vaultOwner(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {
@@ -1273,9 +1403,6 @@ export interface Vault extends BaseContract {
       isMetadataSigned?: null
     ): ContentStoredWithMetadataEventFilter;
 
-    "EIP712DomainChanged()"(): EIP712DomainChangedEventFilter;
-    EIP712DomainChanged(): EIP712DomainChangedEventFilter;
-
     "OwnershipTransferred(address,address)"(
       previousOwner?: string | null,
       newOwner?: string | null
@@ -1285,25 +1412,14 @@ export interface Vault extends BaseContract {
       newOwner?: string | null
     ): OwnershipTransferredEventFilter;
 
-    "PermissionUpgraded(address,uint256,uint8)"(
+    "PermissionUpgraded(address,uint256)"(
       user?: string | null,
-      tokenId?: BigNumberish | null,
-      newPermission?: null
+      tokenId?: BigNumberish | null
     ): PermissionUpgradedEventFilter;
     PermissionUpgraded(
       user?: string | null,
-      tokenId?: BigNumberish | null,
-      newPermission?: null
+      tokenId?: BigNumberish | null
     ): PermissionUpgradedEventFilter;
-
-    "SchemaSet(uint256,string)"(
-      index?: BigNumberish | null,
-      schemaCID?: null
-    ): SchemaSetEventFilter;
-    SchemaSet(
-      index?: BigNumberish | null,
-      schemaCID?: null
-    ): SchemaSetEventFilter;
 
     "TransferBatch(address,address,address,uint256[],uint256[])"(
       operator?: string | null,
@@ -1389,11 +1505,11 @@ export interface Vault extends BaseContract {
   };
 
   estimateGas: {
-    PERMISSION_NONE(overrides?: CallOverrides): Promise<BigNumber>;
-
-    PERMISSION_READ(overrides?: CallOverrides): Promise<BigNumber>;
-
-    PERMISSION_WRITE(overrides?: CallOverrides): Promise<BigNumber>;
+    assignVaultFromProposalOwnership(
+      tokenId: BigNumberish,
+      masterCrosschainGranter: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
 
     balanceOf(
       account: string,
@@ -1407,35 +1523,32 @@ export interface Vault extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    burnVaultAccess(
+      from: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
     createVault(
       name: string,
       description: string,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    eip712Domain(overrides?: CallOverrides): Promise<BigNumber>;
+    getDomainSeparator(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getCurrentSchema(overrides?: CallOverrides): Promise<BigNumber>;
+    getLastTokenId(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getNonce(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+    getNonce(signer: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    getPermission(
-      tokenId: BigNumberish,
+    getPermissionNone(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getPermissionRead(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getPermissionWrite(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getVaultBalance(
       user: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getSchema(
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getVaultOwner(
-      tokenId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getVaultSchemaIndex(
       tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -1456,13 +1569,41 @@ export interface Vault extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
+    hasGrantedPermission(
+      tokenId: BigNumberish,
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    incrementLastTokenId(
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
     isApprovedForAll(
       account: string,
       operator: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    lastSchemaIndex(overrides?: CallOverrides): Promise<BigNumber>;
+    isPermissionVaultRead(
+      tokenId: BigNumberish,
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    isPermissionVaultWrite(
+      tokenId: BigNumberish,
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    lastTokenId(overrides?: CallOverrides): Promise<BigNumber>;
+
+    mintVaultAccess(
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
 
     nonces(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1473,6 +1614,8 @@ export interface Vault extends BaseContract {
       arg1: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    proposalVaultManager(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string }
@@ -1502,10 +1645,7 @@ export interface Vault extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    schemaCIDs(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    schemaManager(overrides?: CallOverrides): Promise<BigNumber>;
 
     setApprovalForAll(
       operator: string,
@@ -1513,8 +1653,26 @@ export interface Vault extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    setSchema(
-      schemaCID: string,
+    setPermissionNone(
+      tokenId: BigNumberish,
+      user: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    setPermissionRead(
+      tokenId: BigNumberish,
+      user: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    setPermissionWrite(
+      tokenId: BigNumberish,
+      user: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    setProposalVaultManager(
+      _manager: string,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
@@ -1578,26 +1736,23 @@ export interface Vault extends BaseContract {
     upgradePermission(
       tokenId: BigNumberish,
       user: string,
-      newPermission: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     uri(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
-    vaultExists(
-      tokenId: BigNumberish,
+    vaultOwner(
+      arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    vaults(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    PERMISSION_NONE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    PERMISSION_READ(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    PERMISSION_WRITE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    assignVaultFromProposalOwnership(
+      tokenId: BigNumberish,
+      masterCrosschainGranter: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
 
     balanceOf(
       account: string,
@@ -1611,38 +1766,39 @@ export interface Vault extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    burnVaultAccess(
+      from: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
     createVault(
       name: string,
       description: string,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
-    eip712Domain(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    getDomainSeparator(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
-    getCurrentSchema(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    getLastTokenId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getNonce(
-      owner: string,
+      signer: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getPermission(
-      tokenId: BigNumberish,
+    getPermissionNone(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getPermissionRead(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getPermissionWrite(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getVaultBalance(
       user: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getSchema(
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getVaultOwner(
-      tokenId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getVaultSchemaIndex(
       tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -1663,13 +1819,41 @@ export interface Vault extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
+    hasGrantedPermission(
+      tokenId: BigNumberish,
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    incrementLastTokenId(
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
     isApprovedForAll(
       account: string,
       operator: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    lastSchemaIndex(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    isPermissionVaultRead(
+      tokenId: BigNumberish,
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    isPermissionVaultWrite(
+      tokenId: BigNumberish,
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    lastTokenId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    mintVaultAccess(
+      to: string,
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
 
     nonces(
       arg0: string,
@@ -1684,6 +1868,10 @@ export interface Vault extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    proposalVaultManager(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     renounceOwnership(
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
@@ -1712,10 +1900,7 @@ export interface Vault extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
-    schemaCIDs(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    schemaManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     setApprovalForAll(
       operator: string,
@@ -1723,8 +1908,26 @@ export interface Vault extends BaseContract {
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
-    setSchema(
-      schemaCID: string,
+    setPermissionNone(
+      tokenId: BigNumberish,
+      user: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    setPermissionRead(
+      tokenId: BigNumberish,
+      user: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    setPermissionWrite(
+      tokenId: BigNumberish,
+      user: string,
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    setProposalVaultManager(
+      _manager: string,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
@@ -1788,7 +1991,6 @@ export interface Vault extends BaseContract {
     upgradePermission(
       tokenId: BigNumberish,
       user: string,
-      newPermission: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
@@ -1797,12 +1999,7 @@ export interface Vault extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    vaultExists(
-      tokenId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    vaults(
+    vaultOwner(
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;

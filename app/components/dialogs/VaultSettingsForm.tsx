@@ -2,6 +2,7 @@
 
 import { useVaultContext } from "@/context/VaultContext";
 import { useGrantAccess } from "@/lib/contracts/hooks/useGrantAccess";
+import { useUpgradePermission } from "@/lib/contracts/hooks/useUpgradePermission";
 import { useVaultData } from "@/lib/subgraph/hooks/VaultData";
 import { AccessRegistry } from "@/lib/subgraph/types/VaultData.types";
 import {
@@ -29,6 +30,7 @@ interface VaultSettingsFormProps {
 export default function VaultSettingsForm({ onClose }: VaultSettingsFormProps) {
   const { address } = useAppKitAccount();
   const { grantAccess } = useGrantAccess();
+  const { upgradePermission } = useUpgradePermission();
   const { vault, isLoading, error } = useVaultContext();
   const { data: vaultData, isLoading: isLoadingVaultData } = useVaultData(
     vault!.id
@@ -64,7 +66,8 @@ export default function VaultSettingsForm({ onClose }: VaultSettingsFormProps) {
         (registry: AccessRegistry) => ({
           address: registry.vaultAccessGranted.to,
           role:
-            registry.vaultAccessGranted.permission === Permissions.CONTRIBUTOR
+            registry.vaultAccessGranted.permission.permission ===
+            Permissions.CONTRIBUTOR
               ? "contributor"
               : "viewer",
           grantedAt: registry.vaultAccessGranted.blockTimestamp,
@@ -85,6 +88,7 @@ export default function VaultSettingsForm({ onClose }: VaultSettingsFormProps) {
 
   useEffect(() => {
     const formattedWallets = wallets?.map((wallet) => {
+      console.log("wallet: ", wallet);
       return {
         address: wallet.address,
         role: wallet.role as "owner" | "contributor" | "viewer",
@@ -174,10 +178,11 @@ export default function VaultSettingsForm({ onClose }: VaultSettingsFormProps) {
     if (!selectedWallet) return;
 
     try {
-      // TODO: Implement upgrade access logic
-      console.log("Upgrading access for:", selectedWallet);
-      // Add a delay to simulate the upgrade process
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await upgradePermission(Number(vault?.id), selectedWallet);
+
+      queryClient.invalidateQueries({
+        queryKey: ["vaultData", vault!.id],
+      });
       setShowUpgradeAccess(false);
       setSelectedWallet(null);
     } catch (error) {

@@ -3,7 +3,9 @@ import { VaultCreated } from "./UserData.types";
 
 export interface VaultAccessGranted {
   to: string;
-  permission: Permissions;
+  permission: {
+    permission: Permissions;
+  };
   blockTimestamp: string;
 }
 

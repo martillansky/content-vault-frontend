@@ -5,7 +5,10 @@ import {
   formatTimestampShort,
 } from "@/app/utils/dataFormaters";
 import { useVaultContext } from "@/context/VaultContext";
-import { decryptCIDFromHex } from "@/lib/crypto/secureEncryption_Multiformats";
+import {
+  decryptCIDFromHex,
+  simpleCIDFromHex,
+} from "@/lib/crypto/secureEncryption_Multiformats";
 import { useVaultsContents } from "@/lib/subgraph/hooks/Content";
 import { Content } from "@/lib/subgraph/types/Content.types";
 import { retrieveEncryptionPassword } from "@/lib/supabase/userSecretsService";
@@ -15,6 +18,8 @@ import {
   Cog6ToothIcon,
   DocumentIcon,
   FolderIcon,
+  LockClosedIcon,
+  LockOpenIcon,
 } from "@heroicons/react/24/outline";
 import { useAppKitAccount } from "@reown/appkit/react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -31,6 +36,7 @@ export interface FileNode {
   children: FileNode[];
   type?: string;
   created?: string;
+  isCIDEncrypted?: boolean;
 }
 
 interface FileExplorerProps {
@@ -48,10 +54,19 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
   const [selectedFile, setSelectedFile] = useState<FileNode | null>(null);
   const [showUploadForm, setShowUploadForm] = useState(false);
   const [showVaultSettings, setShowVaultSettings] = useState(false);
+  const [vaultOwner, setVaultOwner] = useState<string>("");
 
   useEffect(() => {
     setVaultId(vaultId);
   }, [vaultId, setVaultId]);
+
+  useEffect(() => {
+    setVaultOwner(
+      vault?.owner ||
+        process.env.NEXT_PUBLIC_MASTER_CROSSCHAIN_GRANTER_ADDRESS_SEPOLIA ||
+        ""
+    );
+  }, [vault]);
 
   const content = useMemo(
     () => contentResponse?.contentStoredWithMetadata_collection || [],
@@ -83,11 +98,16 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
 
         if (!address) throw new Error("No wallet address found");
         const encryptedCID = fileContent.encryptedCID;
-        const password = await retrieveEncryptionPassword(address);
-        const decrypted = await decryptCIDFromHex(encryptedCID, password);
+        let decryptedFile;
+        if (!fileContent.isCIDEncrypted) {
+          decryptedFile = simpleCIDFromHex(encryptedCID);
+        } else {
+          const password = await retrieveEncryptionPassword(vaultOwner);
+          decryptedFile = await decryptCIDFromHex(encryptedCID, password);
+        }
 
         window.open(
-          `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}/${decrypted}`,
+          `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}/${decryptedFile}`,
           "_blank"
         );
       } catch (error) {
@@ -108,6 +128,12 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
     const isExpanded = expandedFolders.has(node.id);
     const isFolder = node.metatype === "folder";
     const paddingLeft = `${level * 1.5}rem`;
+
+    const contentIcon = node.isCIDEncrypted ? (
+      <LockClosedIcon className="h-5 w-5 text-gray-500 dark:text-gray-400 mr-2" />
+    ) : (
+      <LockOpenIcon className="h-5 w-5 text-gray-500 dark:text-gray-400 mr-2" />
+    );
 
     return (
       <div key={node.id} className="transition-all duration-200">
@@ -133,7 +159,7 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
           ) : (
             <>
               <div className="w-4" />
-              <DocumentIcon className="h-5 w-5 text-gray-500 dark:text-gray-400 mr-2" />
+              {contentIcon}
             </>
           )}
           <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
@@ -168,6 +194,7 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
       {showUploadForm && (
         <ContentUploadForm
           vaultId={vaultId}
+          vaultOwner={vaultOwner}
           onClose={() => setShowUploadForm(false)}
           onSuccess={() => {
             // Refresh the contents
@@ -227,8 +254,10 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
                 <div className="flex items-center space-x-3">
                   {selectedFile.metatype === "folder" ? (
                     <FolderIcon className="h-8 w-8 text-yellow-500 dark:text-yellow-400" />
+                  ) : selectedFile.isCIDEncrypted ? (
+                    <LockClosedIcon className="h-8 w-8 text-gray-500 dark:text-gray-400" />
                   ) : (
-                    <DocumentIcon className="h-8 w-8 text-gray-500 dark:text-gray-400" />
+                    <LockOpenIcon className="h-8 w-8 text-gray-500 dark:text-gray-400" />
                   )}
                   <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
                     {selectedFile.name}

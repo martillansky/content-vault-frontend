@@ -28,6 +28,7 @@ export function contentFormatter(contentArray: Content[]): FileNode {
     type: "",
     metatype: "folder" as const,
     children: [],
+    isCIDEncrypted: false,
   };
 
   contentArray.forEach((content) => {
@@ -49,6 +50,7 @@ export function contentFormatter(contentArray: Content[]): FileNode {
           type: "",
           metatype: "folder" as const,
           children: [],
+          isCIDEncrypted: false,
         };
         parentNode.children.push(nodeFolder);
         nextNode = nodeFolder;
@@ -73,6 +75,7 @@ export function contentFormatter(contentArray: Content[]): FileNode {
         content.fields.find((field) => field.key === "timestamp")?.value ??
         content.blockTimestamp,
       children: [],
+      isCIDEncrypted: content.isCIDEncrypted,
     };
     parentNode.children.push(nodeFile);
   });

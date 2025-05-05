@@ -2,6 +2,7 @@
 
 import {
   ArrowRightIcon,
+  ClockIcon,
   EyeIcon,
   FolderIcon,
   LockClosedIcon,
@@ -10,26 +11,40 @@ import {
 import React from "react";
 import {
   VaultCreated,
+  VaultFromProposal,
   VaultGranted,
 } from "../../lib/subgraph/types/UserData.types";
 import { formatTimestampShort } from "../utils/dataFormaters";
 import { Permissions } from "./VaultList";
 
 interface VaultCardProps {
-  vault: VaultCreated | VaultGranted;
+  vault: VaultCreated | VaultGranted | VaultFromProposal;
   isGrantedAccess?: boolean;
+  isVaultFromProposal?: boolean;
   onVaultClick: (vaultId: string) => void;
   onVaultSelect: (vaultId: string) => void;
+  onPermissionClick?: (vaultId: string) => void;
+  onPendingRelayClick?: (vaultId: string) => void;
+  pendingRelay?: boolean;
 }
 
 const VaultCard: React.FC<VaultCardProps> = ({
   vault,
   isGrantedAccess = false,
+  isVaultFromProposal = false,
   onVaultClick,
   onVaultSelect,
+  onPermissionClick,
+  onPendingRelayClick,
+  pendingRelay,
 }) => {
-  const grantedVault = vault as VaultGranted;
-  const hasPermission = isGrantedAccess && "permission" in vault;
+  const hasPermission =
+    (isGrantedAccess || isVaultFromProposal) && "permission" in vault;
+  const maxLength = 300;
+  const vaultDescriptionCleaned =
+    vault.description.length > maxLength
+      ? vault.description.substring(0, maxLength) + " (...)"
+      : vault.description;
 
   return (
     <div
@@ -68,17 +83,47 @@ const VaultCard: React.FC<VaultCardProps> = ({
         </button>
       </div>
       <p className="text-gray-600 dark:text-gray-300 mb-4">
-        {vault.description || "No description available"}
+        {vaultDescriptionCleaned || "No description available"}
       </p>
       <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400">
         <span>Created: {formatTimestampShort(vault.blockTimestamp)}</span>
         <span className="flex items-center">
           {hasPermission ? (
-            grantedVault.permission === Permissions.VIEWER ? (
-              <>
-                <EyeIcon className="h-4 w-4 mr-1 text-green-500" />
-                Viewer
-              </>
+            vault.permission.permission === Permissions.VIEWER ? (
+              pendingRelay ? (
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onPendingRelayClick?.(vault.tokenId);
+                  }}
+                  className="relative group flex items-center cursor-pointer"
+                >
+                  <ClockIcon className="h-4 w-4 mr-1 text-red-500" />
+                  Pending Upgrade
+                  {isVaultFromProposal && (
+                    <div className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-600 text-white text-sm px-2 py-1 rounded shadow-lg whitespace-nowrap transition-opacity duration-200 opacity-0 group-hover:opacity-100">
+                      Upgrade to contributor in crosschain pending relay. Click
+                      to upgrade!
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onPermissionClick?.(vault.tokenId);
+                  }}
+                  className="relative group flex items-center cursor-pointer"
+                >
+                  <EyeIcon className="h-4 w-4 mr-1 text-green-500" />
+                  Viewer
+                  {isVaultFromProposal && (
+                    <div className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-600 text-white text-sm px-2 py-1 rounded shadow-lg whitespace-nowrap transition-opacity duration-200 opacity-0 group-hover:opacity-100">
+                      Click to upgrade to Contributor!
+                    </div>
+                  )}
+                </div>
+              )
             ) : (
               <>
                 <PencilIcon className="h-4 w-4 mr-1 text-blue-500" />

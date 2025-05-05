@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { gql } from "graphql-request";
-import { requestClient } from "../SubgraphClient";
+import { requestClientSepolia } from "../SubgraphClient";
 import { ContentResponse } from "../types/Content.types";
 
 const GET_CONTENT = gql`
@@ -26,7 +26,7 @@ export function useVaultsContents(tokenId: string) {
     queryKey: ["content", tokenId],
     queryFn: async () => {
       if (!tokenId) return { contentStoredWithMetadata_collection: [] };
-      return requestClient<ContentResponse>(GET_CONTENT, {
+      return requestClientSepolia<ContentResponse>(GET_CONTENT, {
         tokenId: tokenId,
       });
     },

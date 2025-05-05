@@ -31,7 +31,7 @@ export function useStoreContentWithMetadata() {
     let tx;
     if (signMetadata) {
       const deadline = Math.floor(Date.now() / 1000) + 3600;
-      const vaultOwner = await contract.getVaultOwner(tokenId);
+      const vaultOwner = await contract.vaultOwner(tokenId);
       const nonce = await contract.getNonce(vaultOwner);
 
       const domain = {

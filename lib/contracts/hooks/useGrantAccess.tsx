@@ -28,15 +28,15 @@ export function useGrantAccess() {
 
     const permission =
       role === "contributor"
-        ? await contract.PERMISSION_WRITE()
+        ? await contract.getPermissionWrite()
         : role === "viewer"
-        ? await contract.PERMISSION_READ()
-        : await contract.PERMISSION_NONE();
+        ? await contract.getPermissionRead()
+        : await contract.getPermissionNone();
 
     let tx;
     if (signing) {
       const deadline = Math.floor(Date.now() / 1000) + 3600;
-      const vaultOwner = await contract.getVaultOwner(tokenId);
+      const vaultOwner = await contract.vaultOwner(tokenId);
       const nonce = await contract.getNonce(vaultOwner);
 
       const domain = {

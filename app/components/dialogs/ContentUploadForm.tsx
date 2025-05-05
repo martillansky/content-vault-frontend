@@ -26,6 +26,7 @@ interface FileItem {
 
 interface FormProps {
   vaultId: string;
+  vaultOwner: string;
   onClose?: () => void;
   onSuccess?: () => void;
   currentFolder?: string;
@@ -33,6 +34,7 @@ interface FormProps {
 
 export default function ContentUploadForm({
   vaultId,
+  vaultOwner,
   onClose,
   currentFolder = "./",
   onSuccess,
@@ -217,7 +219,8 @@ export default function ContentUploadForm({
       }
 
       const { IpfsHash, MimeType, Name, timestamp } = await uploadToIPFSBackend(
-        connectedAddress!.toLowerCase(),
+        //connectedAddress!.toLowerCase(),
+        vaultOwner!.toLowerCase(),
         files[0].name,
         files[0].file,
         formData.useEncryption

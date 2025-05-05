@@ -13,6 +13,7 @@ interface Vault {
   name: string;
   description: string;
   createdAt: string;
+  owner: string;
 }
 
 interface VaultContextType {
@@ -43,6 +44,7 @@ export function VaultProvider({ children }: VaultProviderProps) {
         name: content.name || "Untitled Vault",
         description: content.description || "",
         createdAt: content.blockTimestamp || "",
+        owner: content.owner || "",
       };
 
       setVault(vaultObject);

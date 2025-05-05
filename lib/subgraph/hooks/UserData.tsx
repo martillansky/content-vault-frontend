@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { gql } from "graphql-request";
-import { requestClient } from "../SubgraphClient";
+import { requestClientSepolia } from "../SubgraphClient";
 import { UserDataResponse } from "../types/UserData.types";
 
 const GET_USER_DATA = gql`
@@ -15,7 +15,9 @@ const GET_USER_DATA = gql`
       }
       vaultAccessesGranted {
         tokenId
-        permission
+        permission {
+          permission
+        }
         accessRegistry {
           vaultCreated {
             tokenId
@@ -24,6 +26,22 @@ const GET_USER_DATA = gql`
             schemaCID
             blockTimestamp
           }
+        }
+      }
+      vaultsFromProposalPinned {
+        tokenId
+        permission {
+          permission
+        }
+        vaultFromProposal {
+          proposalId
+          tokenId
+          name
+          description
+          chainId
+          tokenContract
+          schemaCID
+          blockTimestamp
         }
       }
     }
@@ -35,7 +53,7 @@ export function useUserData(address: string) {
     queryKey: ["userData", address],
     queryFn: async () => {
       if (!address) return { userDatas: [] };
-      return requestClient<UserDataResponse>(GET_USER_DATA, {
+      return requestClientSepolia<UserDataResponse>(GET_USER_DATA, {
         user: address,
       });
     },

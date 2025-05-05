@@ -24,7 +24,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onConnectWallet }) => {
             <ShieldCheckIcon className="h-12 w-12 text-blue-600 dark:text-blue-400" />
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-            Welcome to Content Vault
+            Welcome to Libélula Space
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
             Your decentralized content management solution

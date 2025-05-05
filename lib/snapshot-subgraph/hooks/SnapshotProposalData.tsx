@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { gql } from "graphql-request";
-//import { useMemo } from "react";
 import { snapshotRequestClient } from "../SubgraphClient";
 import {
   SnapshotProposalData,
@@ -49,31 +48,4 @@ export function useSnapshotProposalData(proposalId: string) {
     refetchOnWindowFocus: false, // Don't refetch when window regains focus
     refetchOnMount: false, // Don't refetch when component mounts if data is fresh
   });
-  /* 
-  const queryKey = useMemo(
-    () => ["snapshotProposalData", proposalId],
-    [proposalId]
-  );
-  const queryOptions = useMemo(
-    () => ({
-      queryKey,
-      queryFn: async () => {
-        if (!proposalId) return { proposal: {} as SnapshotProposalData };
-        return snapshotRequestClient<SnapshotProposalDataResponse>(
-          GET_SNAPSHOT_PROPOSAL_DATA,
-          {
-            ID: proposalId,
-          }
-        );
-      },
-      enabled: !!proposalId,
-      staleTime: 5 * 60 * 1000, // Data is considered fresh for 5 minutes
-      gcTime: 10 * 60 * 1000, // Keep unused data in cache for 10 minutes
-      refetchOnWindowFocus: false, // Don't refetch when window regains focus
-      refetchOnMount: false, // Don't refetch when component mounts if data is fresh
-    }),
-    [proposalId, queryKey]
-  );
-
-  return useQuery<SnapshotProposalDataResponse>(queryOptions); */
 }

@@ -36,37 +36,10 @@ const VaultList: React.FC<VaultListProps> = ({ address }) => {
   const router = useRouter();
   const { isConnected, address: connectedAddress } = useAppKitAccount();
   const queryClient = useQueryClient();
-  //const [isLoading, setIsLoading] = useState(false);
-  //const { submitVault } = useCreateVault();
-  //const [proposalId, setProposalId] = useState<string>("");
-  //const lastExecutedProposalData = useRef<string>("");
 
   const { data: userData, isLoading: userDataLoading } = useUserData(
     address || connectedAddress || ""
   );
-
-  /* const { data: snapshotProposalData, isLoading: snapshotProposalDataLoading } =
-    useSnapshotProposalData(proposalId);
- */
-  /* 
-  const proposalData = useMemo(
-    () => snapshotProposalData?.proposal,
-    [snapshotProposalData]
-  );
-
-  const handleSubmit = useCallback(async () => {
-    if (proposalData && proposalData.id !== lastExecutedProposalData.current) {
-      lastExecutedProposalData.current = proposalData.id;
-      setIsLoading(true);
-      await submitVault(proposalData!.title, proposalData?.body || "");
-      setIsLoading(false);
-    }
-  }, [proposalData, submitVault]);
-
-  useEffect(() => {
-    handleSubmit();
-  }, [handleSubmit]);
- */
 
   const [showCreateVaultForm, setShowCreateVaultForm] = useState(false);
   const [showPinProposalVaultForm, setShowPinProposalVaultForm] =

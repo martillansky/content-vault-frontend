@@ -269,43 +269,43 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ vaultId }) => {
                 </div>
                 <div className="space-y-4">
                   {selectedFile.description && (
-                    <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
+                    <div className="bg-white dark:bg-gray-700/50 p-4 rounded-lg shadow-sm">
                       <p className="text-sm text-gray-500 dark:text-gray-400">
                         Description
                       </p>
-                      <p className="text-lg font-medium text-gray-900 dark:text-white">
+                      <p className="text-lg font-medium text-gray-800 dark:text-white">
                         {selectedFile.description}
                       </p>
                     </div>
                   )}
                   <div className="grid grid-cols-2 gap-4">
                     {selectedFile.type && (
-                      <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
+                      <div className="bg-white dark:bg-gray-700/50 p-4 rounded-lg shadow-sm">
                         <p className="text-sm text-gray-500 dark:text-gray-400">
                           Extension
                         </p>
-                        <p className="text-lg font-medium text-gray-900 dark:text-white">
+                        <p className="text-lg font-medium text-gray-800 dark:text-white">
                           {selectedFile.extension}
                         </p>
                       </div>
                     )}
                     {selectedFile.created && (
-                      <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
+                      <div className="bg-white dark:bg-gray-700/50 p-4 rounded-lg shadow-sm">
                         <p className="text-sm text-gray-500 dark:text-gray-400">
                           Created
                         </p>
-                        <p className="text-lg font-medium text-gray-900 dark:text-white">
+                        <p className="text-lg font-medium text-gray-800 dark:text-white">
                           {formatTimestampShort(selectedFile.created)}
                         </p>
                       </div>
                     )}
                   </div>
                   {selectedFile.type && (
-                    <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
+                    <div className="bg-white dark:bg-gray-700/50 p-4 rounded-lg shadow-sm">
                       <p className="text-sm text-gray-500 dark:text-gray-400">
                         Type
                       </p>
-                      <p className="text-lg font-medium text-gray-900 dark:text-white capitalize">
+                      <p className="text-lg font-medium text-gray-800 dark:text-white capitalize">
                         {selectedFile.type}
                       </p>
                     </div>

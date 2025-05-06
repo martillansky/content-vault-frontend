@@ -304,7 +304,7 @@ export default function VaultSettingsForm({ onClose }: VaultSettingsFormProps) {
                 <div>
                   <label
                     htmlFor="name"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    className="block text-sm font-medium text-gray-800 dark:text-gray-300"
                   >
                     Name
                   </label>
@@ -315,7 +315,7 @@ export default function VaultSettingsForm({ onClose }: VaultSettingsFormProps) {
                       id="name"
                       readOnly
                       defaultValue={vault?.name}
-                      className="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+                      className="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm dark:bg-gray-700 dark:text-white bg-gray-50 text-gray-900"
                       placeholder="Enter vault name"
                     />
                   </div>
@@ -323,7 +323,7 @@ export default function VaultSettingsForm({ onClose }: VaultSettingsFormProps) {
                 <div>
                   <label
                     htmlFor="description"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    className="block text-sm font-medium text-gray-800 dark:text-gray-300"
                   >
                     Description
                   </label>
@@ -334,7 +334,7 @@ export default function VaultSettingsForm({ onClose }: VaultSettingsFormProps) {
                       rows={3}
                       readOnly
                       defaultValue={vault?.description}
-                      className="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+                      className="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm dark:bg-gray-700 dark:text-white bg-gray-50 text-gray-900"
                       placeholder="Enter vault description"
                     />
                   </div>
@@ -342,7 +342,7 @@ export default function VaultSettingsForm({ onClose }: VaultSettingsFormProps) {
                 <div>
                   <label
                     htmlFor="owner"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    className="block text-sm font-medium text-gray-800 dark:text-gray-300"
                   >
                     Owner
                   </label>
@@ -352,7 +352,7 @@ export default function VaultSettingsForm({ onClose }: VaultSettingsFormProps) {
                       id="owner"
                       value={vault?.owner}
                       readOnly
-                      className="block w-full rounded-md border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-600 shadow-sm sm:text-sm dark:text-white"
+                      className="block w-full rounded-md border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-600 shadow-sm sm:text-sm text-gray-900 dark:text-white"
                     />
                   </div>
                 </div>

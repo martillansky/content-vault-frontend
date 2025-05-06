@@ -6,7 +6,7 @@ module.exports = {
     "./context/**/*.{js,ts,jsx,tsx,mdx}",
     "./lib/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  darkMode: "media",
+  darkMode: "class",
   theme: {
     extend: {
       backgroundImage: {

@@ -55,7 +55,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onConnectWallet }) => {
           <h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-indigo-400 text-transparent bg-clip-text">
             Libélula Space
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
+          <p className="text-lg text-gray-300 mb-6">
             Welcome to your decentralized content management solution
           </p>
 
@@ -94,7 +94,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onConnectWallet }) => {
             <span>Connect Wallet</span>
           </button>
 
-          <p className="mt-6 text-sm text-gray-500 dark:text-gray-400">
+          <p className="mt-6 text-sm text-gray-400">
             By connecting your wallet, you agree to our Terms of Service and
             Privacy Policy
           </p>

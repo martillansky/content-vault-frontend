@@ -4,6 +4,8 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
+import { ThemeProvider } from "./ThemeContext";
+
 function makeQueryClient() {
   return new QueryClient({
     defaultOptions: {
@@ -19,7 +21,9 @@ function makeQueryClient() {
     },
   });
 }
+
 let browserQueryClient: QueryClient | undefined = undefined;
+
 function getQueryClient() {
   if (isServer) {
     // Server: always make a new query client
@@ -33,11 +37,15 @@ function getQueryClient() {
     return browserQueryClient;
   }
 }
+
 export default function Providers({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const queryClient = getQueryClient();
+
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>{children}</ThemeProvider>
+    </QueryClientProvider>
   );
 }

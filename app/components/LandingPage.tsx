@@ -38,7 +38,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onConnectWallet }) => {
   return (
     <div className="flex flex-col items-center justify-center min-h-[80vh] text-center px-4">
       <div role="presentation" className="absolute inset-0" aria-hidden="true">
-        <div className="absolute inset-0 bg-[url('/images/bg-pattern.png')] opacity-30 bg-cover bg-center bg-fixed" />
+        <div className="absolute inset-0 bg-[url('/images/bg-pattern.png')] opacity-60 bg-cover bg-center bg-fixed" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a] via-transparent to-transparent" />
       </div>
       <div className="w-full">

@@ -19,8 +19,6 @@ export default function CreateVaultForm({ onClose, onSuccess }: FormProps) {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    isPrivate: false,
-    allowContributions: false,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -38,11 +36,6 @@ export default function CreateVaultForm({ onClose, onSuccess }: FormProps) {
         return newErrors;
       });
     }
-  };
-
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: checked }));
   };
 
   const validateForm = () => {
@@ -186,56 +179,6 @@ export default function CreateVaultForm({ onClose, onSuccess }: FormProps) {
               {errors.description}
             </p>
           )}
-        </div>
-
-        <div className="space-y-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-          <div className="flex items-center">
-            <input
-              id="isPrivate"
-              name="isPrivate"
-              type="checkbox"
-              checked={formData.isPrivate}
-              onChange={handleCheckboxChange}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 rounded"
-            />
-            <label
-              htmlFor="isPrivate"
-              className="ml-2 block text-sm text-gray-700 dark:text-gray-300"
-            >
-              Private Vault
-            </label>
-          </div>
-
-          <div className="flex items-center">
-            <input
-              id="allowContributions"
-              name="allowContributions"
-              type="checkbox"
-              checked={formData.allowContributions}
-              onChange={handleCheckboxChange}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 rounded"
-            />
-            <label
-              htmlFor="allowContributions"
-              className="ml-2 block text-sm text-gray-700 dark:text-gray-300"
-            >
-              Allow Contributions
-            </label>
-          </div>
-        </div>
-
-        <div className="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg">
-          <h4 className="text-sm font-medium text-blue-800 dark:text-blue-300 mb-2">
-            Vault Settings
-          </h4>
-          <ul className="text-sm text-blue-700 dark:text-blue-400 space-y-1">
-            <li>• Private vaults are only visible to you</li>
-            <li>• Public vaults can be discovered by others</li>
-            <li>
-              • Allowing contributions lets others add content to your vault
-            </li>
-            <li>• You can change these settings later</li>
-          </ul>
         </div>
       </div>
     </BaseForm>

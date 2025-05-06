@@ -378,14 +378,16 @@ export default function VaultSettingsForm({ onClose }: VaultSettingsFormProps) {
                   <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">
                     Wallet Access
                   </h4>
-                  <button
-                    type="button"
-                    onClick={() => setShowGrantAccess(true)}
-                    className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  >
-                    <UserPlusIcon className="h-4 w-4 mr-1" />
-                    Grant Access
-                  </button>
+                  {address?.toLowerCase() === vault!.owner.toLowerCase() && (
+                    <button
+                      type="button"
+                      onClick={() => setShowGrantAccess(true)}
+                      className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    >
+                      <UserPlusIcon className="h-4 w-4 mr-1" />
+                      Grant Access
+                    </button>
+                  )}
                 </div>
                 <WalletAccessTable
                   walletAccess={wallets}

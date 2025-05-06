@@ -15,6 +15,7 @@ import {
   VaultGranted,
 } from "../../lib/subgraph/types/UserData.types";
 import { formatTimestampShort } from "../utils/dataFormaters";
+import TooltipComponent from "./TooltipComponent";
 import { Permissions } from "./VaultList";
 
 interface VaultCardProps {
@@ -101,10 +102,10 @@ const VaultCard: React.FC<VaultCardProps> = ({
                   <ClockIcon className="h-4 w-4 mr-1 text-red-500" />
                   Pending Upgrade
                   {isVaultFromProposal && (
-                    <div className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-600 text-white text-sm px-2 py-1 rounded shadow-lg whitespace-nowrap transition-opacity duration-200 opacity-0 group-hover:opacity-100">
+                    <TooltipComponent>
                       Upgrade to contributor in crosschain pending relay. Click
                       to upgrade!
-                    </div>
+                    </TooltipComponent>
                   )}
                 </div>
               ) : (
@@ -118,9 +119,9 @@ const VaultCard: React.FC<VaultCardProps> = ({
                   <EyeIcon className="h-4 w-4 mr-1 text-green-500" />
                   Viewer
                   {isVaultFromProposal && (
-                    <div className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-600 text-white text-sm px-2 py-1 rounded shadow-lg whitespace-nowrap transition-opacity duration-200 opacity-0 group-hover:opacity-100">
+                    <TooltipComponent>
                       Click to upgrade to Contributor!
-                    </div>
+                    </TooltipComponent>
                   )}
                 </div>
               )

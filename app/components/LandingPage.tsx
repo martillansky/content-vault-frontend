@@ -3,7 +3,8 @@
 import { WalletIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import React from "react";
-import dragonflyVault from "../../public/images/dragonfly-vault.png";
+import dragonflyVault from "../../public/images/dragonfly-vault-transparent.png";
+import BackgroundTexture from "./BackgroundTexture";
 interface LandingPageProps {
   onConnectWallet: () => void;
 }
@@ -37,18 +38,15 @@ const LandingPage: React.FC<LandingPageProps> = ({ onConnectWallet }) => {
   ];
   return (
     <div className="flex flex-col items-center justify-center min-h-[80vh] text-center px-4">
-      <div role="presentation" className="absolute inset-0" aria-hidden="true">
-        <div className="absolute inset-0 bg-[url('/images/bg-pattern.png')] opacity-60 bg-cover bg-center bg-fixed" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a] via-transparent to-transparent" />
-      </div>
+      <BackgroundTexture />
       <div className="w-full">
         <div className="relative z-10 w-full px-4 py-12 flex flex-col items-center justify-center min-h-screen">
-          <div className="relative w-[250px] h-[250px] mx-auto mb-6 group inline-flex items-center justify-center p-3 bg-blue-100 dark:bg-blue-900/30 rounded-full">
+          <div className="relative w-[300px] h-[300px] mx-auto mb-2 group inline-flex items-center justify-center p-3">
             <Image
               src={dragonflyVault}
               alt="Libélula Space Dragonfly Logo - Representing secure content vaults"
               fill
-              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 40vw, 33vw"
+              sizes="(max-width: 768px) 60vw, (max-width: 1200px) 40vw, 33vw"
               className="object-contain transition-transform duration-700 group-hover:scale-105"
               priority
               loading="eager"
